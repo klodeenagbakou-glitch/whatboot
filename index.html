@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WhaBoost — WhatsApp Business pensé pour l'Afrique</title>
+<meta name="description" content="WhaBoost transforme WhatsApp en outil de vente, de marketing et de paiement pour les entreprises africaines. Mobile Money intégré, interface en français, support local." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  --ink:#172A21;
+  --ink-soft:#4F6357;
+  --bottle:#0F3D2E;
+  --bottle-dark:#092A20;
+  --paper:#FAF6EC;
+  --paper-dim:#F1ECDD;
+  --sage:#E6EEE1;
+  --marigold:#E2A33B;
+  --marigold-dark:#B97F1F;
+  --clay:#C1502E;
+  --line:#DDD6C4;
+  --white:#FFFFFF;
+  --shadow: 0 20px 50px -25px rgba(9,42,32,0.35);
+  --radius: 18px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Manrope',sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:'Fraunces',serif;color:var(--bottle-dark);font-weight:600;letter-spacing:-0.01em;}
+p{color:var(--ink-soft);}
+a{color:inherit;}
+img{max-width:100%;display:block;}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px;}
+@media (max-width:640px){.wrap{padding:0 20px;}}
+
+/* focus visibility */
+a:focus-visible, button:focus-visible, input:focus-visible{outline:2.5px solid var(--marigold-dark); outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:99px;font-weight:700;font-size:14.5px;font-family:'Manrope',sans-serif;border:1.5px solid transparent;cursor:pointer;text-decoration:none;transition:transform .18s ease, box-shadow .18s ease;}
+.btn:hover{transform:translateY(-1px);}
+.btn-primary{background:var(--bottle);color:var(--white);box-shadow:0 12px 26px -12px rgba(15,61,46,0.55);}
+.btn-primary:hover{background:var(--bottle-dark);}
+.btn-ghost{background:transparent;color:var(--bottle-dark);border-color:var(--line);}
+.btn-ghost:hover{border-color:var(--bottle);}
+.btn-light{background:var(--paper);color:var(--bottle-dark);border-color:var(--line);}
+
+/* ---------- Nav ---------- */
+header.nav{position:sticky;top:0;z-index:80;background:rgba(250,246,236,0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:16px 0;}
+.logo{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:var(--bottle-dark);display:flex;align-items:center;gap:8px;}
+.logo .dot{width:9px;height:9px;border-radius:50%;background:var(--marigold);}
+.nav-links{display:flex;gap:30px;align-items:center;}
+.nav-links a{font-size:14.5px;font-weight:600;color:var(--ink-soft);text-decoration:none;}
+.nav-links a:hover{color:var(--bottle-dark);}
+.nav-cta{display:flex;gap:12px;align-items:center;}
+.nav-toggle{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--bottle-dark);}
+@media (max-width:860px){
+  .nav-links{display:none;}
+  .nav-cta .btn-ghost{display:none;}
+  .nav-toggle{display:block;}
+}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;padding:76px 0 40px;}
+.hero-glow{position:absolute;inset:-10% -10% auto -10%;height:620px;pointer-events:none;
+  background: radial-gradient(480px circle at var(--gx,50%) var(--gy,20%), rgba(226,163,59,0.28), transparent 60%);
+  transition: background-position .1s ease-out;
+  z-index:0;}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;}
+@media (max-width:920px){.hero-grid{grid-template-columns:1fr;gap:44px;}}
+.eyebrow-line{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:var(--bottle);margin-bottom:18px;}
+.eyebrow-line .flag{display:inline-flex;gap:3px;}
+.eyebrow-line .flag span{width:6px;height:14px;border-radius:1px;}
+h1.hero-title{font-size:clamp(34px,4.6vw,54px);line-height:1.08;margin:0 0 22px;}
+.hero-title em{font-style:italic;color:var(--clay);}
+.hero-sub{font-size:17.5px;max-width:480px;margin:0 0 30px;}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
+.hero-trust{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);}
+.hero-trust span{display:flex;align-items:center;gap:7px;}
+.hero-trust svg{width:15px;height:15px;color:var(--bottle);flex-shrink:0;}
+
+/* phone mockup */
+.phone-stage{position:relative;display:flex;justify-content:center;}
+.phone{width:290px;background:var(--bottle-dark);border-radius:38px;padding:12px;box-shadow:var(--shadow);position:relative;}
+.phone-screen{background:#0b1f18 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%230d271e"/></svg>');
+  border-radius:26px;height:520px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.phone-topbar{background:var(--bottle);padding:14px 16px 10px;display:flex;align-items:center;gap:10px;color:#fff;}
+.phone-topbar .avatar{width:32px;height:32px;border-radius:50%;background:var(--marigold);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fraunces',serif;color:var(--bottle-dark);font-size:14px;}
+.phone-topbar .who{font-size:13.5px;font-weight:700;}
+.phone-topbar .status{font-size:11px;color:#BFE0D2;}
+.phone-body{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:9px;overflow:hidden;background:
+  linear-gradient(rgba(250,246,236,0.04),rgba(250,246,236,0.04));}
+.bubble{max-width:78%;padding:9px 13px;border-radius:14px;font-size:12.8px;line-height:1.45;opacity:0;transform:translateY(8px);animation:bubbleIn .45s ease forwards;}
+.bubble.in{align-self:flex-start;background:#173C2E;color:#EFF6EF;border-bottom-left-radius:4px;}
+.bubble.out{align-self:flex-end;background:var(--marigold);color:#2A1D06;border-bottom-right-radius:4px;}
+.bubble.sys{align-self:center;background:rgba(255,255,255,0.08);color:#BFE0D2;font-size:11px;padding:5px 12px;border-radius:99px;}
+@keyframes bubbleIn{to{opacity:1;transform:translateY(0);}}
+.phone-input{padding:10px 14px 16px;display:flex;align-items:center;gap:8px;}
+.phone-input .field{flex:1;background:rgba(255,255,255,0.08);border-radius:99px;padding:9px 14px;font-size:11.5px;color:#9FBBAC;}
+.phone-input .send{width:34px;height:34px;border-radius:50%;background:var(--marigold);flex-shrink:0;}
+.phone-badge{position:absolute;bottom:-16px;left:-26px;background:#fff;border:1px solid var(--line);padding:11px 16px;border-radius:14px;box-shadow:var(--shadow);font-size:12.5px;font-weight:700;color:var(--bottle-dark);display:flex;align-items:center;gap:8px;}
+.phone-badge .pulse{width:8px;height:8px;border-radius:50%;background:#2FA86B;position:relative;}
+.phone-badge .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid #2FA86B;animation:pulse 1.8s ease-out infinite;}
+@keyframes pulse{0%{transform:scale(0.6);opacity:.9;}100%{transform:scale(1.9);opacity:0;}}
+@media (max-width:920px){.phone-badge{left:14px;}}
+
+/* ---------- Marquee ---------- */
+.marquee-section{padding:26px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper-dim);}
+.marquee-label{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:16px;font-weight:600;}
+.marquee-track{display:flex;gap:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.marquee-inner{display:flex;gap:52px;padding:0 26px;animation:scroll 22s linear infinite;flex-shrink:0;}
+.marquee-track:hover .marquee-inner{animation-play-state:paused;}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.pay-badge{display:flex;align-items:center;gap:9px;white-space:nowrap;font-family:'Fraunces',serif;font-weight:600;font-size:16.5px;color:var(--bottle-dark);opacity:.85;}
+.pay-badge .sw{width:9px;height:9px;border-radius:3px;}
+
+/* ---------- Sections generic ---------- */
+section{padding:88px 0;}
+@media (max-width:640px){section{padding:56px 0;}}
+.section-head{max-width:600px;margin-bottom:52px;}
+.section-head h2{font-size:clamp(28px,3.4vw,38px);line-height:1.16;margin:0 0 14px;}
+.section-head p{font-size:16.5px;}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* ---------- Problem / editorial strip ---------- */
+.editorial{display:grid;grid-template-columns:0.9fr 1.1fr;gap:60px;align-items:start;}
+@media (max-width:880px){.editorial{grid-template-columns:1fr;gap:36px;}}
+.editorial-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;}
+.editorial-list li{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line);font-size:15.5px;color:var(--ink);}
+.editorial-list li:last-child{border-bottom:1px solid var(--line);}
+.editorial-list li .x{color:var(--clay);font-weight:800;flex-shrink:0;}
+
+/* ---------- Feature rows ---------- */
+.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:54px 0;border-top:1px solid var(--line);}
+.feature-row:first-of-type{border-top:none;}
+.feature-row.reverse .feature-visual{order:2;}
+@media (max-width:880px){.feature-row, .feature-row.reverse{grid-template-columns:1fr;gap:30px;}
+  .feature-row.reverse .feature-visual{order:0;}}
+.feature-text .tag{display:inline-block;font-size:12.5px;font-weight:700;color:var(--marigold-dark);background:rgba(226,163,59,0.15);padding:5px 12px;border-radius:99px;margin-bottom:16px;}
+.feature-text h3{font-size:25px;margin:0 0 12px;}
+.feature-text p{font-size:15.5px;margin:0 0 16px;}
+.feature-text ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+.feature-text ul li{font-size:14.5px;color:var(--ink);display:flex;gap:9px;align-items:flex-start;}
+.feature-text ul li svg{width:15px;height:15px;color:var(--bottle);margin-top:3px;flex-shrink:0;}
+.feature-visual{background:var(--sage);border-radius:var(--radius);padding:26px;min-height:230px;display:flex;align-items:center;justify-content:center;}
+.mock-inbox{width:100%;background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;}
+.mock-inbox .row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:12.5px;}
+.mock-inbox .row .av{width:28px;height:28px;border-radius:50%;background:var(--bottle);flex-shrink:0;}
+.mock-inbox .row .name{font-weight:700;color:var(--ink);}
+.mock-inbox .row .snip{color:var(--ink-soft);font-size:11.5px;}
+.mock-inbox .row .tag2{margin-left:auto;font-size:10px;background:var(--sage);color:var(--bottle-dark);padding:3px 8px;border-radius:99px;font-weight:700;}
+.mock-crm{width:100%;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:16px;}
+.mock-crm .bar{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin-bottom:12px;}
+.mock-crm .stage{display:flex;gap:8px;}
+.mock-crm .col{flex:1;background:var(--paper-dim);border-radius:9px;padding:9px;min-height:120px;}
+.mock-crm .col h4{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin:0 0 8px;}
+.mock-crm .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:11px;margin-bottom:6px;box-shadow:0 4px 10px -6px rgba(0,0,0,.15);}
+.mock-pay{width:100%;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:20px;}
+.mock-pay .amount{font-family:'Fraunces',serif;font-size:30px;color:var(--bottle-dark);margin-bottom:4px;}
+.mock-pay .grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.mock-pay .grid4 div{background:var(--paper-dim);border-radius:9px;padding:9px;font-size:11.5px;font-weight:700;color:var(--bottle-dark);text-align:center;}
+.mock-camp{width:100%;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:18px;}
+.mock-camp .barchart{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:12px;}
+.mock-camp .barchart .b{flex:1;background:linear-gradient(180deg,var(--marigold),var(--bottle));border-radius:5px 5px 0 0;}
+
+/* ---------- How it works ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;}
+@media (max-width:820px){.steps{grid-template-columns:1fr;}}
+.step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;}
+.step .num{font-family:'Fraunces',serif;font-size:34px;color:var(--marigold-dark);margin-bottom:14px;}
+.step h3{font-size:18px;margin:0 0 8px;}
+.step p{font-size:14.5px;margin:0;}
+
+/* ---------- Pricing ---------- */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:end;}
+@media (max-width:920px){.pricing-grid{grid-template-columns:1fr;}}
+.plan{background:#fff;border:1.5px solid var(--line);border-radius:22px;padding:32px 26px;display:flex;flex-direction:column;}
+.plan.featured{background:var(--bottle-dark);border-color:var(--bottle-dark);color:#fff;transform:translateY(-14px);box-shadow:var(--shadow);}
+.plan.featured *{color:#fff;}
+.plan .pname{font-family:'Fraunces',serif;font-size:20px;margin-bottom:6px;}
+.plan .pfor{font-size:13px;color:var(--ink-soft);margin-bottom:18px;}
+.plan.featured .pfor{color:#BFE0D2;}
+.plan .price{display:flex;align-items:baseline;gap:6px;margin-bottom:22px;}
+.plan .price .num{font-family:'Fraunces',serif;font-size:40px;}
+.plan .price .per{font-size:13px;color:var(--ink-soft);}
+.plan.featured .price .per{color:#BFE0D2;}
+.plan ul{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:11px;flex:1;}
+.plan ul li{font-size:14px;display:flex;gap:9px;align-items:flex-start;}
+.plan ul li svg{width:15px;height:15px;color:var(--bottle);flex-shrink:0;margin-top:2px;}
+.plan.featured ul li svg{color:var(--marigold);}
+.plan .badge-pop{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--marigold);color:var(--bottle-dark);font-size:11.5px;font-weight:800;padding:5px 14px;border-radius:99px;}
+.plan{position:relative;}
+
+/* ---------- FAQ ---------- */
+.faq-item{border-top:1px solid var(--line);}
+.faq-item:last-child{border-bottom:1px solid var(--line);}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:22px 0;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:700;color:var(--bottle-dark);cursor:pointer;font-family:'Manrope',sans-serif;}
+.faq-q .plus{font-size:20px;color:var(--marigold-dark);transition:transform .25s ease;flex-shrink:0;margin-left:14px;}
+.faq-item.open .plus{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.faq-a p{padding:0 0 22px;font-size:14.5px;max-width:640px;}
+.faq-item.open .faq-a{max-height:220px;}
+
+/* ---------- Final CTA ---------- */
+.final-cta{background:var(--bottle-dark);border-radius:28px;padding:64px 48px;text-align:center;color:#fff;position:relative;overflow:hidden;}
+.final-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(500px circle at 20% 20%, rgba(226,163,59,0.22), transparent 60%);}
+.final-cta h2{color:#fff;position:relative;}
+.final-cta p{color:#BFE0D2;position:relative;max-width:480px;margin:0 auto 30px;}
+.final-cta .hero-ctas{justify-content:center;position:relative;}
+@media (max-width:640px){.final-cta{padding:44px 24px;}}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line);padding:50px 0 30px;}
+.foot-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;margin-bottom:36px;}
+.foot-links{display:flex;gap:50px;flex-wrap:wrap;}
+.foot-col h4{font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;}
+.foot-col a{display:block;font-size:14px;color:var(--ink);text-decoration:none;margin-bottom:9px;}
+.foot-col a:hover{color:var(--bottle);}
+.foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:22px;}
+
+/* ---------- Auth modal ---------- */
+.auth-overlay{position:fixed;inset:0;background:rgba(9,42,32,0.55);backdrop-filter:blur(3px);z-index:900;display:none;align-items:center;justify-content:center;padding:20px;}
+.auth-overlay.open{display:flex;}
+.auth-modal{background:var(--white);border-radius:22px;max-width:400px;width:100%;padding:34px;box-shadow:var(--shadow);position:relative;}
+.auth-close{position:absolute;top:16px;right:16px;background:var(--paper);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;color:var(--ink-soft);}
+.auth-modal h3{font-size:22px;margin:0 0 6px;}
+.auth-modal p.sub-auth{font-size:13.5px;color:var(--ink-soft);margin:0 0 20px;}
+.auth-tabs{display:flex;background:var(--paper-dim);border-radius:99px;padding:4px;margin-bottom:20px;}
+.auth-tab{flex:1;border:none;background:none;padding:9px;border-radius:99px;font-weight:700;font-size:13.5px;color:var(--ink-soft);cursor:pointer;font-family:'Manrope',sans-serif;}
+.auth-tab.active{background:var(--white);color:var(--bottle-dark);box-shadow:0 4px 10px -6px rgba(0,0,0,.15);}
+.auth-field{margin-bottom:14px;}
+.auth-field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
+.auth-field input{width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid var(--line);font-size:14px;font-family:inherit;}
+.auth-field input:focus{outline:none;border-color:var(--bottle);}
+.auth-submit{width:100%;margin-top:6px;justify-content:center;}
+.auth-msg{font-size:13px;margin-top:12px;padding:10px 12px;border-radius:10px;display:none;}
+.auth-msg.show{display:block;}
+.auth-msg.error{background:rgba(193,80,46,0.12);color:var(--clay);}
+.auth-msg.success{background:var(--sage);color:var(--bottle-dark);}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap navbar">
+    <div class="logo"><span class="dot"></span>WhaBoost</div>
+    <nav class="nav-links">
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#comment-ca-marche">Comment ça marche</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="btn btn-ghost" onclick="openAuth(null,'login')">Se connecter</button>
+      <button class="btn btn-primary" onclick="openAuth()">Essai gratuit</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-glow" id="heroGlow"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow-line">
+        <span class="flag"><span style="background:#0F3D2E"></span><span style="background:#E2A33B"></span><span style="background:#C1502E"></span></span>
+        Pensé pour les entreprises africaines
+      </div>
+      <h1 class="hero-title">Ton WhatsApp devient <em>ton meilleur vendeur</em>.</h1>
+      <p class="hero-sub">WhaBoost centralise tes conversations, répond à ta place, encaisse en Mobile Money et relance tes clients — pendant que tu gères ta boutique.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" onclick="openAuth()">Démarrer mon essai gratuit</button>
+        <a href="#comment-ca-marche" class="btn btn-ghost">Voir comment ça marche</a>
+      </div>
+      <div class="hero-trust">
+        <span><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Aucune carte requise</span>
+        <span><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>MTN, Moov, Orange, Wave acceptés</span>
+        <span><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Support en français</span>
+      </div>
+    </div>
+    <div class="phone-stage">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-topbar">
+            <div class="avatar">FC</div>
+            <div>
+              <div class="who">Fleurs de Cotonou</div>
+              <div class="status">en ligne · réponse auto</div>
+            </div>
+          </div>
+          <div class="phone-body" id="phoneBody"></div>
+          <div class="phone-input"><div class="field">Écrire un message…</div><div class="send"></div></div>
+        </div>
+      </div>
+      <div class="phone-badge"><span class="pulse"></span>Nouvelle commande — 12 500 FCFA</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-section">
+  <div class="marquee-label">Paiements locaux acceptés directement sur WhaBoost</div>
+  <div class="marquee-track">
+    <div class="marquee-inner" id="marqueeInner"></div>
+  </div>
+</div>
+
+<section id="probleme">
+  <div class="wrap editorial">
+    <div class="reveal">
+      <div class="section-head" style="margin-bottom:0;">
+        <h2>WhatsApp t'apporte des clients. Le désordre te les fait perdre.</h2>
+        <p>Tu réponds toute la journée sur ton téléphone, tu perds le fil des commandes, et personne ne relance les clients qui ont disparu après "je réfléchis". Ça coûte des ventes, tous les jours.</p>
+      </div>
+    </div>
+    <ul class="editorial-list reveal">
+      <li><span class="x">✕</span>Réponses manuelles, même la nuit et le week-end</li>
+      <li><span class="x">✕</span>Prospects perdus faute de relance</li>
+      <li><span class="x">✕</span>Commandes suivies sur un cahier ou dans ta tête</li>
+      <li><span class="x">✕</span>Plusieurs vendeurs, une seule boîte de réception</li>
+      <li><span class="x">✕</span>Aucun chiffre pour savoir ce qui marche</li>
+    </ul>
+  </div>
+</section>
+
+<section id="fonctionnalites" style="background:var(--paper-dim);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Tout ce qu'il faut pour vendre sérieusement sur WhatsApp</h2>
+      <p>Pas besoin d'être technicien. Chaque fonctionnalité est pensée pour une entreprise qui vend déjà sur WhatsApp et veut arrêter de s'y perdre.</p>
+    </div>
+
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <span class="tag">Boîte de réception</span>
+        <h3>Toutes tes conversations, une seule vue</h3>
+        <p>Centralise les messages de tous tes numéros WhatsApp et répartis-les entre tes agents sans confusion.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Réponses automatiques quand tu es absent</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Plusieurs agents, zéro double réponse</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-inbox">
+          <div class="row"><div class="av"></div><div><div class="name">Aïcha B.</div><div class="snip">Je prends le pack de 3 alors</div></div><div class="tag2">Nouveau</div></div>
+          <div class="row"><div class="av"></div><div><div class="name">Karim S.</div><div class="snip">Livraison possible à Fidjrossè ?</div></div></div>
+          <div class="row"><div class="av"></div><div><div class="name">Estelle M.</div><div class="snip">Merci, à bientôt !</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row reverse reveal">
+      <div class="feature-text">
+        <span class="tag">CRM léger</span>
+        <h3>Suis chaque client, de la question à la vente</h3>
+        <p>Vois où en est chaque prospect en un coup d'œil, sans tableur ni cahier.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Étapes personnalisables (prospect, en discussion, vendu)</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Import de tes contacts existants en un clic</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-crm">
+          <div class="bar"><span>Pipeline commercial</span><span>32 contacts</span></div>
+          <div class="stage">
+            <div class="col"><h4>Prospects</h4><div class="card">Aïcha B.</div><div class="card">Karim S.</div></div>
+            <div class="col"><h4>En discussion</h4><div class="card">Estelle M.</div></div>
+            <div class="col"><h4>Vendu</h4><div class="card">Yves D.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <span class="tag">Paiements</span>
+        <h3>Encaisse sans faire sortir le client de WhatsApp</h3>
+        <p>Envoie un lien de paiement et reçois l'argent directement en Mobile Money ou par carte.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>MTN Mobile Money, Moov Money, Orange Money, Wave</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cartes bancaires et PayPal pour tes clients à l'étranger</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-pay">
+          <div style="font-size:11.5px;color:var(--ink-soft);">Lien de paiement envoyé</div>
+          <div class="amount">12 500 FCFA</div>
+          <div class="grid4">
+            <div>MTN MoMo</div><div>Orange Money</div><div>Moov Money</div><div>Wave</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row reverse reveal">
+      <div class="feature-text">
+        <span class="tag">Marketing</span>
+        <h3>Relance et fidélise en un envoi groupé</h3>
+        <p>Segmente tes contacts et envoie une promotion ciblée en quelques minutes, sans coder.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Relances automatiques des paniers non conclus</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Statistiques d'ouverture et de réponse</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-camp">
+          <div style="font-size:12.5px;font-weight:700;color:var(--bottle-dark);">Campagne "Promo weekend"</div>
+          <div class="barchart">
+            <div class="b" style="height:40%;"></div><div class="b" style="height:70%;"></div><div class="b" style="height:55%;"></div><div class="b" style="height:90%;"></div><div class="b" style="height:65%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="comment-ca-marche">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Trois étapes pour démarrer</h2>
+      <p>Aucune compétence technique requise. La plupart des commerçants sont opérationnels le jour même.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Crée ton compte</h3>
+        <p>Renseigne ton entreprise et connecte ton numéro WhatsApp Business en quelques minutes.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Importe tes contacts</h3>
+        <p>Charge ton fichier Excel existant ou ajoute tes clients au fil de l'eau.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Automatise et vends</h3>
+        <p>Active les réponses automatiques, les paiements et tes premières campagnes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tarifs" style="background:var(--paper-dim);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Des tarifs pensés pour le marché africain</h2>
+      <p>Sans engagement. Change d'offre à tout moment.</p>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="plan">
+        <div class="pname">Starter</div>
+        <div class="pfor">Pour tester et démarrer seul</div>
+        <div class="price"><span class="num">10€</span><span class="per">/ mois</span></div>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>1 numéro WhatsApp</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Boîte de réception + CRM léger</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Paiements Mobile Money</li>
+        </ul>
+        <button class="btn btn-ghost" style="justify-content:center;" onclick="openAuth('starter')">Choisir Starter</button>
+      </div>
+      <div class="plan featured">
+        <div class="badge-pop">Le plus choisi</div>
+        <div class="pname">Business</div>
+        <div class="pfor">Pour une équipe qui grandit</div>
+        <div class="price"><span class="num">30€</span><span class="per">/ mois</span></div>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 numéros WhatsApp, agents illimités</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Chatbot et campagnes marketing</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Toutes les options de paiement</li>
+        </ul>
+        <button class="btn btn-primary" style="justify-content:center;background:var(--marigold);color:var(--bottle-dark);" onclick="openAuth('business')">Choisir Business</button>
+      </div>
+      <div class="plan">
+        <div class="pname">Premium</div>
+        <div class="pfor">Pour les grandes structures</div>
+        <div class="price"><span class="num">60€</span><span class="per">/ mois</span></div>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Numéros et agents illimités</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>IA intégrée pour les réponses</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Support prioritaire dédié</li>
+        </ul>
+        <button class="btn btn-ghost" style="justify-content:center;" onclick="openAuth('premium')">Choisir Premium</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap" style="max-width:760px;">
+    <div class="section-head reveal">
+      <h2>Questions fréquentes</h2>
+      <p>Ce que les commerçants nous demandent le plus souvent.</p>
+    </div>
+    <div class="reveal">
+      <div class="faq-item open">
+        <button class="faq-q" onclick="toggleFaq(this)">Faut-il un compte WhatsApp Business API ?<span class="plus">+</span></button>
+        <div class="faq-a"><p>On t'accompagne dans la vérification de ton entreprise auprès de Meta — c'est une étape obligatoire pour utiliser l'API officielle, et notre équipe te guide pas à pas.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Comment fonctionnent les paiements Mobile Money ?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Tu envoies un lien de paiement dans la conversation WhatsApp. Le client choisit MTN, Moov, Orange Money ou Wave, et l'argent arrive directement sur ton compte marchand.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Puis-je annuler à tout moment ?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Oui, aucun engagement. Tu changes d'offre ou tu annules directement depuis ton tableau de bord.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Le support est-il vraiment en français ?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Oui, toute l'équipe support répond en français, avec une bonne connaissance du contexte commercial ouest-africain.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="final-cta reveal">
+      <h2 class="serif" style="font-size:clamp(26px,3.6vw,36px);">Tes clients t'écrivent déjà sur WhatsApp.</h2>
+      <p>Donne-leur une réponse à la hauteur — automatique, organisée, et prête à encaisser.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" style="background:var(--marigold);color:var(--bottle-dark);" onclick="openAuth()">Démarrer mon essai gratuit</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="logo"><span class="dot"></span>WhaBoost</div>
+        <p style="max-width:260px;font-size:13.5px;margin-top:10px;">Le WhatsApp Business pensé pour l'Afrique — Mobile Money inclus.</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Produit</h4>
+          <a href="#fonctionnalites">Fonctionnalités</a>
+          <a href="#tarifs">Tarifs</a>
+          <a href="#comment-ca-marche">Comment ça marche</a>
+        </div>
+        <div class="foot-col">
+          <h4>Entreprise</h4>
+          <a href="#">À propos</a>
+          <a href="#faq">FAQ</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="foot-col">
+          <h4>Légal</h4>
+          <a href="#">Confidentialité</a>
+          <a href="#">Conditions</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> WhaBoost — Cotonou, Bénin.</span>
+      <span>Fait pour les commerçants qui vendent sur WhatsApp.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <h3 id="authTitle">Démarre ton essai gratuit</h3>
+    <p class="sub-auth" id="authSubtitle">Aucune carte, aucun mot de passe à retenir.</p>
+
+    <button type="button" class="btn btn-ghost auth-google" onclick="loginWithGoogle()" style="width:100%;justify-content:center;margin-bottom:16px;">
+      <svg width="17" height="17" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 01-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.98v2.33A9 9 0 009 18z"/><path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 013.68 9c0-.59.1-1.16.27-1.7V4.97H.98A9 9 0 000 9c0 1.45.35 2.83.98 4.03l2.97-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 00.98 4.97l2.97 2.33C4.66 5.17 6.65 3.58 9 3.58z"/></svg>
+      Continuer avec Google
+    </button>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div style="flex:1;height:1px;background:var(--line);"></div>
+      <span style="font-size:12px;color:var(--ink-soft);">ou</span>
+      <div style="flex:1;height:1px;background:var(--line);"></div>
+    </div>
+
+    <form id="authFormEmail">
+      <div class="auth-field" id="fieldFullName">
+        <label>Nom de l'entreprise</label>
+        <input type="text" id="authCompany" placeholder="Ex. Boutique Fleurs de Cotonou" />
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="authEmail" required placeholder="toi@gmail.com" />
+      </div>
+      <button type="submit" class="btn btn-primary auth-submit" id="authSubmitBtn">Recevoir mon code par email</button>
+    </form>
+
+    <form id="authFormCode" style="display:none;">
+      <p style="font-size:13px;color:var(--ink-soft);margin:0 0 14px;">Code envoyé à <strong id="codeEmailDisplay"></strong>. Vérifie aussi tes spams.</p>
+      <div class="auth-field">
+        <label>Code à 6 chiffres</label>
+        <input type="text" id="authCode" required maxlength="6" inputmode="numeric" placeholder="123456" style="letter-spacing:4px;font-size:18px;text-align:center;" />
+      </div>
+      <button type="submit" class="btn btn-primary auth-submit">Vérifier et continuer</button>
+      <button type="button" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:10px;" onclick="backToEmail()">Changer d'email</button>
+    </form>
+
+    <div class="auth-msg" id="authMsg"></div>
+  </div>
+</div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- Cursor glow (hero only) ---------- */
+(function(){
+  const hero = document.getElementById('hero');
+  const glow = document.getElementById('heroGlow');
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    glow.style.setProperty('--gx', x + '%');
+    glow.style.setProperty('--gy', y + '%');
+  });
+})();
+
+/* ---------- Scroll reveal ---------- */
+(function(){
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  items.forEach(i => io.observe(i));
+})();
+
+/* ---------- Phone conversation animation ---------- */
+(function(){
+  const script = [
+    {type:'sys', text:"Aujourd'hui, 09:12"},
+    {type:'in', text:"Bonjour, vous avez encore le bouquet rose ?"},
+    {type:'out', text:"Bonjour ! Oui, il en reste 3. Je vous l'envoie 👇"},
+    {type:'in', text:"Parfait, je le prends !"},
+    {type:'out', text:"Voici le lien de paiement Mobile Money 💳"},
+    {type:'sys', text:"Paiement reçu — 12 500 FCFA ✅"},
+  ];
+  const body = document.getElementById('phoneBody');
+  let i = 0;
+  function step(){
+    if (i >= script.length) {
+      setTimeout(() => { body.innerHTML = ''; i = 0; step(); }, 2200);
+      return;
+    }
+    const msg = script[i];
+    const el = document.createElement('div');
+    el.className = 'bubble ' + msg.type;
+    el.textContent = msg.text;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    i++;
+    setTimeout(step, msg.type === 'sys' ? 900 : 1300);
+  }
+  step();
+})();
+
+/* ---------- Marquee content ---------- */
+(function(){
+  const items = [
+    {name:'MTN Mobile Money', c:'#FFCB05'},
+    {name:'Orange Money', c:'#FF6600'},
+    {name:'Moov Money', c:'#004A9F'},
+    {name:'Wave', c:'#1DC8CD'},
+    {name:'Visa / Mastercard', c:'#0F3D2E'},
+    {name:'Stripe', c:'#635BFF'},
+  ];
+  const el = document.getElementById('marqueeInner');
+  const html = items.map(i => `<div class="pay-badge"><span class="sw" style="background:${i.c}"></span>${i.name}</div>`).join('');
+  el.innerHTML = html + html; // doubled for seamless loop
+})();
+
+/* ---------- FAQ accordion ---------- */
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+/* ---------- Supabase auth ---------- */
+const SUPABASE_URL = 'https://eloklrhoqqesbcqbtidz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2tscmhvcXFlc2JjcWJ0aWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MjM4NzUsImV4cCI6MjEwNDk5OTg3NX0.aQtZKneDEIXuxARe1kwgBxQgDRR2itfzhpk7psgcKB8';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let chosenPlan = null;
+let pendingEmail = null;
+
+function openAuth(plan){
+  chosenPlan = plan || null;
+  backToEmail();
+  document.getElementById('authOverlay').classList.add('open');
+}
+function closeAuth(){
+  document.getElementById('authOverlay').classList.remove('open');
+  document.getElementById('authMsg').className = 'auth-msg';
+}
+function backToEmail(){
+  document.getElementById('authFormEmail').style.display = 'block';
+  document.getElementById('authFormCode').style.display = 'none';
+  document.getElementById('authTitle').textContent = "Démarre ton essai gratuit";
+  document.getElementById('authSubtitle').textContent = "Aucune carte, aucun mot de passe à retenir.";
+  document.getElementById('authMsg').className = 'auth-msg';
+}
+
+async function loginWithGoogle(){
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin + '/dashboard.html' }
+  });
+  if (error) {
+    const msg = document.getElementById('authMsg');
+    msg.textContent = "Connexion Google indisponible pour l'instant : " + error.message;
+    msg.className = 'auth-msg error show';
+  }
+}
+
+document.getElementById('authFormEmail').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('authEmail').value.trim();
+  const company = document.getElementById('authCompany').value.trim();
+  const msg = document.getElementById('authMsg');
+  msg.className = 'auth-msg';
+
+  try {
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: true, data: { full_name: company, chosen_plan: chosenPlan } }
+    });
+    if (error) throw error;
+    pendingEmail = email;
+    document.getElementById('codeEmailDisplay').textContent = email;
+    document.getElementById('authFormEmail').style.display = 'none';
+    document.getElementById('authFormCode').style.display = 'block';
+    document.getElementById('authTitle').textContent = "Vérifie ton email";
+    document.getElementById('authSubtitle').textContent = "Entre le code à 6 chiffres qu'on vient de t'envoyer.";
+  } catch (err) {
+    msg.textContent = err.message || "Une erreur est survenue.";
+    msg.className = 'auth-msg error show';
+  }
+});
+
+document.getElementById('authFormCode').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const code = document.getElementById('authCode').value.trim();
+  const msg = document.getElementById('authMsg');
+  msg.className = 'auth-msg';
+  try {
+    const { error } = await supabaseClient.auth.verifyOtp({ email: pendingEmail, token: code, type: 'email' });
+    if (error) throw error;
+    msg.textContent = "Vérifié ! Redirection...";
+    msg.className = 'auth-msg success show';
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 600);
+  } catch (err) {
+    msg.textContent = err.message || "Code invalide ou expiré.";
+    msg.className = 'auth-msg error show';
+  }
+});
+</script>
+</body>
+</html>
