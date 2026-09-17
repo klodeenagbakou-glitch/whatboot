@@ -96,28 +96,29 @@ h1.hero-title{font-size:clamp(34px,4.6vw,54px);line-height:1.08;margin:0 0 22px;
 
 /* phone mockup */
 .phone-stage{position:relative;display:flex;justify-content:center;}
-.phone{width:290px;background:var(--bottle-dark);border-radius:38px;padding:12px;box-shadow:var(--shadow);position:relative;}
+.phone{width:350px;background:var(--bottle-dark);border-radius:42px;padding:14px;box-shadow:var(--shadow);position:relative;}
 .phone-screen{background:#0b1f18 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%230d271e"/></svg>');
-  border-radius:26px;height:520px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
-.phone-topbar{background:var(--bottle);padding:14px 16px 10px;display:flex;align-items:center;gap:10px;color:#fff;}
-.phone-topbar .avatar{width:32px;height:32px;border-radius:50%;background:var(--marigold);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fraunces',serif;color:var(--bottle-dark);font-size:14px;}
-.phone-topbar .who{font-size:13.5px;font-weight:700;}
-.phone-topbar .status{font-size:11px;color:#BFE0D2;}
-.phone-body{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:9px;overflow:hidden;background:
+  border-radius:28px;height:600px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.phone-topbar{background:var(--bottle);padding:16px 18px 12px;display:flex;align-items:center;gap:11px;color:#fff;}
+.phone-topbar .avatar{width:36px;height:36px;border-radius:50%;background:var(--marigold);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fraunces',serif;color:var(--bottle-dark);font-size:15px;}
+.phone-topbar .who{font-size:14.5px;font-weight:700;}
+.phone-topbar .status{font-size:12px;color:#BFE0D2;}
+.phone-body{flex:1;padding:18px 14px;display:flex;flex-direction:column;gap:10px;overflow:hidden;background:
   linear-gradient(rgba(250,246,236,0.04),rgba(250,246,236,0.04));}
-.bubble{max-width:78%;padding:9px 13px;border-radius:14px;font-size:12.8px;line-height:1.45;opacity:0;transform:translateY(8px);animation:bubbleIn .45s ease forwards;}
+.bubble{max-width:78%;padding:10px 14px;border-radius:15px;font-size:13.8px;line-height:1.5;opacity:0;transform:translateY(8px);animation:bubbleIn .45s ease forwards;}
 .bubble.in{align-self:flex-start;background:#173C2E;color:#EFF6EF;border-bottom-left-radius:4px;}
 .bubble.out{align-self:flex-end;background:var(--marigold);color:#2A1D06;border-bottom-right-radius:4px;}
 .bubble.sys{align-self:center;background:rgba(255,255,255,0.08);color:#BFE0D2;font-size:11px;padding:5px 12px;border-radius:99px;}
 @keyframes bubbleIn{to{opacity:1;transform:translateY(0);}}
-.phone-input{padding:10px 14px 16px;display:flex;align-items:center;gap:8px;}
-.phone-input .field{flex:1;background:rgba(255,255,255,0.08);border-radius:99px;padding:9px 14px;font-size:11.5px;color:#9FBBAC;}
-.phone-input .send{width:34px;height:34px;border-radius:50%;background:var(--marigold);flex-shrink:0;}
+.phone-input{padding:12px 16px 18px;display:flex;align-items:center;gap:9px;}
+.phone-input .field{flex:1;background:rgba(255,255,255,0.08);border-radius:99px;padding:10px 15px;font-size:12.5px;color:#9FBBAC;}
+.phone-input .send{width:38px;height:38px;border-radius:50%;background:var(--marigold);flex-shrink:0;}
 .phone-badge{position:absolute;bottom:-16px;left:-26px;background:#fff;border:1px solid var(--line);padding:11px 16px;border-radius:14px;box-shadow:var(--shadow);font-size:12.5px;font-weight:700;color:var(--bottle-dark);display:flex;align-items:center;gap:8px;}
 .phone-badge .pulse{width:8px;height:8px;border-radius:50%;background:#2FA86B;position:relative;}
 .phone-badge .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid #2FA86B;animation:pulse 1.8s ease-out infinite;}
 @keyframes pulse{0%{transform:scale(0.6);opacity:.9;}100%{transform:scale(1.9);opacity:0;}}
 @media (max-width:920px){.phone-badge{left:14px;}}
+@media (max-width:400px){.phone{width:100%;max-width:340px;}}
 .demo-picker{margin-top:56px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);}
 .demo-picker-label{font-size:12.5px;font-weight:700;color:var(--bottle-dark);margin-bottom:10px;}
 .demo-picker-chips{display:flex;flex-wrap:wrap;gap:8px;}
@@ -208,8 +209,8 @@ section{padding:88px 0;}
 .plan .pname{font-family:'Fraunces',serif;font-size:20px;margin-bottom:6px;}
 .plan .pfor{font-size:13px;color:var(--ink-soft);margin-bottom:18px;}
 .plan.featured .pfor{color:#BFE0D2;}
-.plan .price{display:flex;align-items:baseline;gap:6px;margin-bottom:22px;}
-.plan .price .num{font-family:'Fraunces',serif;font-size:40px;}
+.plan .price{display:flex;align-items:baseline;gap:7px;margin-bottom:22px;}
+.plan .price .num{font-family:'Fraunces',serif;font-size:32px;}
 .plan .price .per{font-size:13px;color:var(--ink-soft);}
 .plan.featured .price .per{color:#BFE0D2;}
 .plan ul{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:11px;flex:1;}
@@ -485,7 +486,7 @@ footer{border-top:1px solid var(--line);padding:50px 0 30px;}
       <div class="plan">
         <div class="pname">Starter</div>
         <div class="pfor">Pour tester et démarrer seul</div>
-        <div class="price"><span class="num">10€</span><span class="per">/ mois</span></div>
+        <div class="price"><span class="num">7 000</span><span class="per">FCFA / mois</span></div>
         <ul>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>1 numéro WhatsApp</li>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Boîte de réception + CRM léger</li>
@@ -497,7 +498,7 @@ footer{border-top:1px solid var(--line);padding:50px 0 30px;}
         <div class="badge-pop">Le plus choisi</div>
         <div class="pname">Business</div>
         <div class="pfor">Pour une équipe qui grandit</div>
-        <div class="price"><span class="num">30€</span><span class="per">/ mois</span></div>
+        <div class="price"><span class="num">20 000</span><span class="per">FCFA / mois</span></div>
         <ul>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 numéros WhatsApp, agents illimités</li>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Chatbot et campagnes marketing</li>
@@ -508,7 +509,7 @@ footer{border-top:1px solid var(--line);padding:50px 0 30px;}
       <div class="plan">
         <div class="pname">Premium</div>
         <div class="pfor">Pour les grandes structures</div>
-        <div class="price"><span class="num">60€</span><span class="per">/ mois</span></div>
+        <div class="price"><span class="num">40 000</span><span class="per">FCFA / mois</span></div>
         <ul>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Numéros et agents illimités</li>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>IA intégrée pour les réponses</li>

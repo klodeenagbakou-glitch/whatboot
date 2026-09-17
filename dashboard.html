@@ -16,7 +16,10 @@
     --text: #172033;
     --muted: #7b8497;
     --border: #e7eaf0;
-    --sidebar: #101827;
+    --sidebar: #ffffff;
+    --sidebar-text: #4b5568;
+    --sidebar-active-bg: #e6f7ee;
+    --footer-bg: #0F3D2E;
 }
 
 body {
@@ -51,7 +54,7 @@ button {
 .sidebar {
     width: 255px;
     background: var(--sidebar);
-    color: white;
+    color: var(--sidebar-text);
     padding: 24px 15px;
     display: flex;
     flex-direction: column;
@@ -60,6 +63,7 @@ button {
     top: 0;
     bottom: 0;
     z-index: 100;
+    border-right: 1px solid var(--border);
 }
 
 .logo {
@@ -88,12 +92,12 @@ button {
 
 .logo span {
     font-size: 11px;
-    color: #8792a6;
+    color: var(--muted);
 }
 
 .menu-title {
     font-size: 10px;
-    color: #6d778a;
+    color: var(--muted);
     font-weight: bold;
     margin: 20px 10px 8px;
 }
@@ -106,7 +110,7 @@ button {
     padding: 12px;
     margin-bottom: 4px;
     background: transparent;
-    color: #aeb7c8;
+    color: var(--sidebar-text);
     border-radius: 9px;
     text-align: left;
     font-size: 13px;
@@ -114,12 +118,13 @@ button {
 
 .nav-item:hover,
 .nav-item.active {
-    background: #1b293b;
-    color: white;
+    background: var(--sidebar-active-bg);
+    color: var(--primary-dark);
 }
 
 .nav-item.active {
-    color: #35d98f;
+    color: var(--primary-dark);
+    font-weight: bold;
 }
 
 .nav-item span {
@@ -135,9 +140,12 @@ button {
     gap: 10px;
     align-items: center;
     padding: 14px 8px 0;
-    border-top: 1px solid #263143;
+    border-top: 1px solid var(--border);
     margin-top: 10px;
 }
+
+.profile-mini strong { color: var(--text); }
+.profile-mini small { color: var(--muted); }
 
 .profile-mini strong {
     display: block;
@@ -1411,12 +1419,12 @@ input, textarea, select, button {
 
 /* ===== FOOTER DASHBOARD ===== */
 .app-footer{
-    background:var(--sidebar);
+    background:var(--footer-bg);
     color:#aeb7c8;
     margin-left:0;
     width:100%;
     overflow:hidden;
-    border-top:1px solid #263143;
+    border-top:1px solid #163b2e;
 }
 
 .footer-inner{
