@@ -118,6 +118,18 @@ h1.hero-title{font-size:clamp(34px,4.6vw,54px);line-height:1.08;margin:0 0 22px;
 .phone-badge .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid #2FA86B;animation:pulse 1.8s ease-out infinite;}
 @keyframes pulse{0%{transform:scale(0.6);opacity:.9;}100%{transform:scale(1.9);opacity:0;}}
 @media (max-width:920px){.phone-badge{left:14px;}}
+.demo-picker{margin-top:56px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);}
+.demo-picker-label{font-size:12.5px;font-weight:700;color:var(--bottle-dark);margin-bottom:10px;}
+.demo-picker-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.demo-chip{font-family:'Manrope',sans-serif;font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--paper);color:var(--bottle-dark);cursor:pointer;transition:background .15s ease,border-color .15s ease,transform .15s ease;}
+.demo-chip:hover{border-color:var(--marigold);transform:translateY(-1px);}
+.demo-chip.active{background:var(--bottle);border-color:var(--bottle);color:#fff;}
+.bubble.typing{align-self:flex-start;background:#173C2E;padding:11px 15px;}
+.bubble.typing span{display:inline-block;width:5px;height:5px;margin-right:3px;border-radius:50%;background:#BFE0D2;animation:typingBlink 1.1s infinite;}
+.bubble.typing span:nth-child(2){animation-delay:.18s;}
+.bubble.typing span:nth-child(3){animation-delay:.36s;}
+@keyframes typingBlink{0%,60%,100%{opacity:.25;}30%{opacity:1;}}
+@media (max-width:920px){.demo-picker{margin-top:20px;}}
 
 /* ---------- Marquee ---------- */
 .marquee-section{padding:26px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper-dim);}
@@ -308,6 +320,15 @@ footer{border-top:1px solid var(--line);padding:50px 0 30px;}
         </div>
       </div>
       <div class="phone-badge"><span class="pulse"></span>Nouvelle commande — 12 500 FCFA</div>
+      <div class="demo-picker">
+        <div class="demo-picker-label">Essayez : mettez-vous à la place d'un client 👇</div>
+        <div class="demo-picker-chips">
+          <button class="demo-chip" data-demo="produit">Question produit</button>
+          <button class="demo-chip" data-demo="prix">Demande de prix</button>
+          <button class="demo-chip" data-demo="commande">Suivi de commande</button>
+          <button class="demo-chip" data-demo="sav">Réclamation</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -639,9 +660,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
   items.forEach(i => io.observe(i));
 })();
 
-/* ---------- Phone conversation animation ---------- */
+/* ---------- Phone conversation animation + démo interactive ---------- */
 (function(){
-  const script = [
+  const autoScript = [
     {type:'sys', text:"Aujourd'hui, 09:12"},
     {type:'in', text:"Bonjour, vous avez encore le bouquet rose ?"},
     {type:'out', text:"Bonjour ! Oui, il en reste 3. Je vous l'envoie 👇"},
@@ -649,23 +670,103 @@ document.getElementById('year').textContent = new Date().getFullYear();
     {type:'out', text:"Voici le lien de paiement Mobile Money 💳"},
     {type:'sys', text:"Paiement reçu — 12 500 FCFA ✅"},
   ];
+
+  // Scénarios joués quand le visiteur clique sur un exemple, comme s'il était le client.
+  const demoScripts = {
+    produit: [
+      {type:'in', text:"Bonjour, la robe bleue existe en taille 40 ?"},
+      {type:'typing'},
+      {type:'out', text:"Bonjour ! Oui, la taille 40 est disponible en bleu et en vert 🙂"},
+      {type:'out', text:"Voici deux photos du modèle 👇"},
+    ],
+    prix: [
+      {type:'in', text:"C'est combien le carton de 12 ?"},
+      {type:'typing'},
+      {type:'out', text:"Le carton de 12 est à 9 500 FCFA, livraison incluse à Cotonou 🚚"},
+    ],
+    commande: [
+      {type:'in', text:"Bonjour, où en est ma commande #482 ?"},
+      {type:'typing'},
+      {type:'out', text:"Votre commande #482 est en livraison, elle arrive aujourd'hui avant 18h ✅"},
+    ],
+    sav: [
+      {type:'in', text:"Le produit reçu est abîmé, je ne suis pas content."},
+      {type:'typing'},
+      {type:'out', text:"Désolé pour la gêne 🙏 Un agent reprend votre dossier tout de suite pour un remplacement."},
+      {type:'sys', text:"Transféré à un agent — priorité haute"},
+    ],
+  };
+
   const body = document.getElementById('phoneBody');
-  let i = 0;
-  function step(){
-    if (i >= script.length) {
-      setTimeout(() => { body.innerHTML = ''; i = 0; step(); }, 2200);
-      return;
-    }
-    const msg = script[i];
+  const chips = document.querySelectorAll('.demo-chip');
+  let autoTimer = null;
+  let autoIndex = 0;
+  let demoActive = false;
+
+  function renderBubble(msg){
     const el = document.createElement('div');
-    el.className = 'bubble ' + msg.type;
-    el.textContent = msg.text;
+    if (msg.type === 'typing') {
+      el.className = 'bubble typing';
+      el.innerHTML = '<span></span><span></span><span></span>';
+    } else {
+      el.className = 'bubble ' + msg.type;
+      el.textContent = msg.text;
+    }
     body.appendChild(el);
     body.scrollTop = body.scrollHeight;
-    i++;
-    setTimeout(step, msg.type === 'sys' ? 900 : 1300);
+    return el;
   }
-  step();
+
+  function autoStep(){
+    if (demoActive) return;
+    if (autoIndex >= autoScript.length) {
+      autoTimer = setTimeout(() => { body.innerHTML = ''; autoIndex = 0; autoStep(); }, 2200);
+      return;
+    }
+    const msg = autoScript[autoIndex];
+    renderBubble(msg);
+    autoIndex++;
+    autoTimer = setTimeout(autoStep, msg.type === 'sys' ? 900 : 1300);
+  }
+
+  function playDemo(kind){
+    const steps = demoScripts[kind];
+    if (!steps) return;
+    demoActive = true;
+    clearTimeout(autoTimer);
+    body.innerHTML = '';
+    chips.forEach(c => c.classList.toggle('active', c.dataset.demo === kind));
+
+    let i = 0;
+    function next(){
+      if (i >= steps.length) {
+        setTimeout(() => {
+          demoActive = false;
+          chips.forEach(c => c.classList.remove('active'));
+          body.innerHTML = '';
+          autoIndex = 0;
+          autoStep();
+        }, 3200);
+        return;
+      }
+      const msg = steps[i];
+      if (msg.type === 'typing') {
+        const el = renderBubble(msg);
+        setTimeout(() => { el.remove(); i++; next(); }, 1100);
+      } else {
+        renderBubble(msg);
+        i++;
+        setTimeout(next, 1000);
+      }
+    }
+    next();
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => playDemo(chip.dataset.demo));
+  });
+
+  autoStep();
 })();
 
 /* ---------- Marquee content ---------- */
