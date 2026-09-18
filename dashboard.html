@@ -1,3386 +1,327 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary: #18a66a;
-    --primary-dark: #128653;
-    --background: #f5f7fb;
-    --white: #ffffff;
-    --text: #172033;
-    --muted: #7b8497;
-    --border: #e7eaf0;
-    --sidebar: #ffffff;
-    --sidebar-text: #4b5568;
-    --sidebar-active-bg: #e6f7ee;
-    --footer-bg: #0F3D2E;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--background);
-    color: var(--text);
-}
-
-button,
-input,
-textarea,
-select {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-    border: none;
-}
-
-
-/* APP */
-
-.app {
-    display: flex;
-    min-height: 100vh;
-}
-
-
-/* SIDEBAR */
-
-.sidebar {
-    width: 255px;
-    background: var(--sidebar);
-    color: var(--sidebar-text);
-    padding: 24px 15px;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-    border-right: 1px solid var(--border);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 10px 30px;
-}
-
-.logo-icon {
-    width: 42px;
-    height: 42px;
-    background: var(--primary);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 21px;
-    font-weight: bold;
-}
-
-.logo strong {
-    display: block;
-    font-size: 17px;
-}
-
-.logo span {
-    font-size: 11px;
-    color: var(--muted);
-}
-
-.menu-title {
-    font-size: 10px;
-    color: var(--muted);
-    font-weight: bold;
-    margin: 20px 10px 8px;
-}
-
-.nav-item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    margin-bottom: 4px;
-    background: transparent;
-    color: var(--sidebar-text);
-    border-radius: 9px;
-    text-align: left;
-    font-size: 13px;
-}
-
-.nav-item:hover,
-.nav-item.active {
-    background: var(--sidebar-active-bg);
-    color: var(--primary-dark);
-}
-
-.nav-item.active {
-    color: var(--primary-dark);
-    font-weight: bold;
-}
-
-.nav-item span {
-    font-size: 17px;
-}
-
-.sidebar-bottom {
-    margin-top: auto;
-}
-
-.profile-mini {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    padding: 14px 8px 0;
-    border-top: 1px solid var(--border);
-    margin-top: 10px;
-}
-
-.profile-mini strong { color: var(--text); }
-.profile-mini small { color: var(--muted); }
-
-.profile-mini strong {
-    display: block;
-    font-size: 12px;
-}
-
-.profile-mini small {
-    color: #778195;
-    font-size: 10px;
-}
-
-
-/* MAIN */
-
-.main {
-    margin-left: 255px;
-    width: calc(100% - 255px);
-}
-
-
-/* TOPBAR */
-
-.topbar {
-    height: 82px;
-    background: white;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 35px;
-}
-
-.topbar h1 {
-    font-size: 21px;
-}
-
-.topbar p {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.top-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.icon-button {
-    background: #f5f7fa;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    position: relative;
-}
-
-.notification-dot {
-    width: 7px;
-    height: 7px;
-    background: #e84545;
-    border-radius: 50%;
-    position: absolute;
-    top: 7px;
-    right: 7px;
-}
-
-.user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user strong {
-    font-size: 12px;
-    display: block;
-}
-
-.user small {
-    color: var(--muted);
-    font-size: 10px;
-}
-
-.avatar {
-    width: 36px;
-    height: 36px;
-    background: #dff6eb;
-    color: #138a58;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.mobile-menu {
-    display: none;
-}
-
-
-/* CONTENT */
-
-.content {
-    padding: 30px 35px;
-}
-
-.page {
-    display: none;
-}
-
-.active-page {
-    display: block;
-}
-
-
-/* WELCOME */
-
-.welcome-card {
-    background: linear-gradient(110deg, #10251f, #163b2e);
-    border-radius: 17px;
-    padding: 30px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow: hidden;
-}
-
-.welcome-card h2 {
-    font-size: 24px;
-    margin: 14px 0 8px;
-}
-
-.welcome-card p {
-    color: #b6c9c0;
-    font-size: 13px;
-    max-width: 620px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.badge {
-    background: rgba(43, 216, 137, .13);
-    color: #43df98;
-    padding: 7px 11px;
-    border-radius: 30px;
-    font-size: 10px;
-}
-
-.welcome-icon {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.06);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 60px;
-}
-
-
-/* BUTTONS */
-
-.primary-btn {
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-    padding: 11px 17px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.primary-btn:hover {
-    background: var(--primary-dark);
-}
-
-.full {
-    width: 100%;
-}
-
-.link-btn {
-    background: transparent;
-    color: var(--primary);
-    font-size: 12px;
-}
-
-
-/* STATS */
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.stat-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.stat-card span {
-    color: var(--muted);
-    font-size: 11px;
-    display: block;
-    margin-bottom: 7px;
-}
-
-.stat-card strong {
-    display: inline-block;
-    font-size: 21px;
-    margin-right: 7px;
-}
-
-.stat-card small {
-    font-size: 10px;
-}
-
-.positive {
-    color: #15a966;
-}
-
-.stat-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.blue {
-    background: #e9f2ff;
-}
-
-.green {
-    background: #e5f8ef;
-}
-
-.purple {
-    background: #f0eaff;
-}
-
-.orange {
-    background: #fff1df;
-}
-
-
-/* CARDS */
-
-.card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    padding: 20px;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 20px;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.card-header h3 {
-    font-size: 14px;
-}
-
-.card-header p {
-    color: var(--muted);
-    font-size: 11px;
-    margin-top: 5px;
-}
-
-
-/* CHART */
-
-.chart {
-    height: 260px;
-    display: flex;
-}
-
-.chart-y {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    color: #9aa2b0;
-    font-size: 9px;
-    padding-bottom: 25px;
-}
-
-.bars {
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-around;
-    margin-left: 15px;
-    border-bottom: 1px solid var(--border);
-}
-
-.bar-column {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    width: 10%;
-}
-
-.bar {
-    width: 35px;
-    max-width: 70%;
-    background: var(--primary);
-    border-radius: 5px 5px 0 0;
-    min-height: 10px;
-}
-
-.bar-column span {
-    font-size: 9px;
-    color: var(--muted);
-    margin-top: 9px;
-}
-
-
-/* CAMPAIGNS */
-
-.campaign {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.campaign:last-child {
-    border-bottom: none;
-}
-
-.campaign-icon {
-    width: 35px;
-    height: 35px;
-    background: #f4f6f8;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.campaign-info {
-    flex: 1;
-}
-
-.campaign-info strong {
-    display: block;
-    font-size: 11px;
-}
-
-.campaign-info span {
-    color: var(--muted);
-    font-size: 9px;
-    display: block;
-    margin-top: 4px;
-}
-
-
-/* STATUS */
-
-.status {
-    padding: 5px 8px;
-    border-radius: 20px;
-    font-size: 9px;
-    white-space: nowrap;
-}
-
-.success {
-    background: #e6f8ef;
-    color: #14945c;
-}
-
-.running {
-    background: #e8f1ff;
-    color: #3977d4;
-}
-
-.scheduled {
-    background: #fff1df;
-    color: #d88320;
-}
-
-.warning {
-    background: #fff3df;
-    color: #d18422;
-}
-
-
-/* PAGE HEADING */
-
-.page-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.page-heading h2 {
-    font-size: 22px;
-}
-
-.page-heading p {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-
-/* TOOLBAR */
-
-.toolbar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.toolbar input,
-.toolbar select,
-.conversation-search {
-    background: white;
-    border: 1px solid var(--border);
-    padding: 11px 13px;
-    border-radius: 8px;
-    font-size: 11px;
-    outline: none;
-}
-
-.toolbar input {
-    flex: 1;
-}
-
-
-/* TABLE */
-
-.table-card {
-    padding: 0;
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 650px;
-}
-
-th,
-td {
-    padding: 16px;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-    font-size: 11px;
-}
-
-th {
-    color: var(--muted);
-    font-size: 10px;
-    font-weight: 500;
-    background: #fafbfc;
-}
-
-.table-user {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-}
-
-.more-btn {
-    background: transparent;
-    color: var(--muted);
-}
-
-
-/* MESSAGES */
-
-.message-layout {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 15px;
-    height: 560px;
-}
-
-.conversation-list {
-    padding: 15px;
-}
-
-.conversation-search {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.conversation {
-    display: flex;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    position: relative;
-}
-
-.conversation.active,
-.conversation:hover {
-    background: #f0faf5;
-}
-
-.conversation strong {
-    font-size: 11px;
-}
-
-.conversation p {
-    color: var(--muted);
-    font-size: 9px;
-    margin-top: 5px;
-    max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.conversation small {
-    position: absolute;
-    right: 8px;
-    top: 12px;
-    color: var(--muted);
-    font-size: 8px;
-}
-
-.chat-window {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.chat-header {
-    padding: 15px;
-    border-bottom: 1px solid var(--border);
-}
-
-.chat-header small {
-    display: block;
-    color: var(--primary);
-    font-size: 9px;
-    margin-top: 3px;
-}
-
-.chat-body {
-    flex: 1;
-    padding: 20px;
-    background: #f7f9fb;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.message {
-    padding: 10px 13px;
-    max-width: 65%;
-    border-radius: 12px;
-    font-size: 11px;
-    line-height: 1.5;
-}
-
-.received {
-    background: white;
-    align-self: flex-start;
-}
-
-.sent {
-    background: #d9f8e9;
-    align-self: flex-end;
-}
-
-.chat-input {
-    display: flex;
-    padding: 12px;
-    gap: 8px;
-    border-top: 1px solid var(--border);
-}
-
-.chat-input input {
-    flex: 1;
-    border: 1px solid var(--border);
-    padding: 11px;
-    border-radius: 8px;
-    outline: none;
-    font-size: 11px;
-}
-
-.chat-input button {
-    width: 42px;
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-}
-
-
-/* AUTOMATION */
-
-.automation-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.automation-card {
-    background: white;
-    border: 1px solid var(--border);
-    padding: 20px;
-    border-radius: 13px;
-}
-
-.automation-top {
-    display: flex;
-    justify-content: space-between;
-}
-
-.automation-icon {
-    font-size: 25px;
-}
-
-.automation-card h3 {
-    font-size: 14px;
-    margin-top: 15px;
-}
-
-.automation-card p {
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.5;
-    margin: 8px 0 15px;
-}
-
-.rule {
-    background: #f6f8fa;
-    padding: 9px;
-    border-radius: 6px;
-    font-size: 9px;
-    margin-top: 5px;
-}
-
-
-/* SWITCH */
-
-.switch input {
-    display: none;
-}
-
-.switch span {
-    width: 40px;
-    height: 21px;
-    background: #ccd2dc;
-    border-radius: 20px;
-    display: block;
-    position: relative;
-}
-
-.switch span:before {
-    content: "";
-    width: 17px;
-    height: 17px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    left: 2px;
-    top: 2px;
-    transition: .2s;
-}
-
-.switch input:checked + span {
-    background: var(--primary);
-}
-
-.switch input:checked + span:before {
-    transform: translateX(19px);
-}
-
-
-/* CAMPAIGN STATS */
-
-.campaign-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.mini-stat {
-    background: white;
-    border: 1px solid var(--border);
-    padding: 20px;
-    border-radius: 12px;
-}
-
-.mini-stat span {
-    display: block;
-    color: var(--muted);
-    font-size: 10px;
-    margin-bottom: 8px;
-}
-
-.mini-stat strong {
-    font-size: 23px;
-}
-
-
-/* CRM */
-
-.pipeline {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-}
-
-.pipeline-column {
-    background: #eef1f5;
-    border-radius: 12px;
-    padding: 12px;
-    min-height: 400px;
-}
-
-.pipeline-title {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    margin-bottom: 12px;
-}
-
-.pipeline-title span {
-    background: white;
-    padding: 3px 7px;
-    border-radius: 15px;
-    color: var(--muted);
-}
-
-.lead-card {
-    background: white;
-    border-radius: 9px;
-    padding: 14px;
-    margin-bottom: 9px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.03);
-}
-
-.lead-card strong {
-    font-size: 11px;
-}
-
-.lead-card p {
-    font-size: 10px;
-    color: var(--muted);
-    margin: 6px 0;
-}
-
-.lead-card small {
-    color: #a0a7b2;
-    font-size: 8px;
-}
-
-
-/* MODAL */
-
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(8, 15, 25, .55);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 300;
-    padding: 20px;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.modal-box {
-    background: white;
-    width: 420px;
-    max-width: 100%;
-    border-radius: 15px;
-    padding: 22px;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.modal-header h3 {
-    font-size: 16px;
-}
-
-.modal-header button {
-    background: #f2f4f6;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    font-size: 18px;
-}
-
-.modal-box input,
-.modal-box textarea,
-.modal-box select {
-    width: 100%;
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    outline: none;
-    font-size: 11px;
-}
-
-.modal-box textarea {
-    height: 100px;
-    resize: vertical;
-}
-
-
-/* TOAST */
-
-.toast {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: #172033;
-    color: white;
-    padding: 13px 18px;
-    border-radius: 8px;
-    font-size: 11px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: .3s;
-    z-index: 500;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* RESPONSIVE */
-
-@media (max-width: 1100px) {
-
-    .stats-grid,
-    .campaign-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .automation-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .pipeline {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-
-@media (max-width: 800px) {
-
-    .sidebar {
-        transform: translateX(-100%);
-        transition: .3s;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .main {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .mobile-menu {
-        display: block;
-        background: transparent;
-        font-size: 20px;
-        margin-right: 10px;
-    }
-
-    .topbar {
-        padding: 0 18px;
-    }
-
-    .top-actions .user {
-        display: none;
-    }
-
-    .content {
-        padding: 20px 15px;
-    }
-
-    .welcome-icon {
-        display: none;
-    }
-
-    .message-layout {
-        grid-template-columns: 1fr;
-        height: auto;
-    }
-
-    .conversation-list {
-        display: none;
-    }
-
-    .chat-window {
-        height: 550px;
-    }
-
-    .automation-grid,
-    .pipeline {
-        grid-template-columns: 1fr;
-    }
-}
-
-
-@media (max-width: 550px) {
-
-    .stats-grid,
-    .campaign-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .page-heading {
-        align-items: flex-start;
-        gap: 15px;
-        flex-direction: column;
-    }
-
-    .welcome-card {
-        padding: 22px;
-    }
-
-    .welcome-card h2 {
-        font-size: 20px;
-    }
-
-    .topbar h1 {
-        font-size: 17px;
-    }
-}
-
-
-/* =========================
-   RESPONSIVE RENFORCÉ — TOUS ÉCRANS
-   Le contenu et les fonctionnalités existants sont conservés.
-========================= */
-html { width: 100%; overflow-x: hidden; }
-body { min-width: 0; overflow-x: hidden; }
-img, svg, video, canvas { max-width: 100%; height: auto; }
-input, textarea, select, button { max-width: 100%; }
-
-.main { min-width: 0; }
-.content { min-width: 0; }
-.card, .stat-card, .welcome-card, .automation-card, .lead-card,
-.pipeline-column, .campaign, .conversation-list, .chat-window { min-width: 0; }
-
-/* Les tableaux restent utilisables sur téléphone sans casser la page. */
-.table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.table-card table { width: 100%; min-width: 620px; }
-
-/* Empêche les longs textes/noms de créer un débordement. */
-.card-header, .page-heading, .topbar, .campaign-info,
-.conversation, .message, .lead-card, .pipeline-title { min-width: 0; }
-.card-header > *, .page-heading > *, .topbar > *, .campaign-info > * { min-width: 0; }
-
-/* Tablette paysage / petits laptops */
-@media (max-width: 1200px) {
-    .sidebar { width: 230px; }
-    .main { margin-left: 230px; width: calc(100% - 230px); }
-    .topbar { padding: 0 24px; }
-    .content { padding: 25px 24px; }
-}
-
-/* Tablette et téléphone */
-@media (max-width: 800px) {
-    .sidebar {
-        width: min(280px, 86vw);
-        box-shadow: 10px 0 30px rgba(0,0,0,.18);
-    }
-
-    .main { margin-left: 0; width: 100%; }
-    .topbar { min-height: 72px; height: auto; gap: 12px; padding: 12px 18px; }
-    .topbar > div:first-of-type { flex: 1; min-width: 0; }
-    .topbar h1, .topbar p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .top-actions { flex-shrink: 0; }
-    .content { padding: 22px 18px; }
-
-    .stats-grid, .campaign-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .automation-grid, .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .message-layout { grid-template-columns: 1fr; height: auto; }
-    .conversation-list { display: none; }
-    .chat-window { min-height: 500px; height: auto; }
-    .chat-body { min-height: 360px; }
-    .page-heading { flex-wrap: wrap; }
-    .toolbar { flex-wrap: wrap; }
-    .toolbar > * { max-width: 100%; }
-    .modal-box { width: min(100%, 560px); max-height: calc(100vh - 40px); overflow-y: auto; }
-}
-
-/* Téléphones */
-@media (max-width: 550px) {
-    .topbar { padding: 10px 14px; }
-    .content { padding: 16px 12px; }
-    .top-actions .user { display: none; }
-    .mobile-menu { display: block; font-size: 22px; padding: 6px; flex-shrink: 0; }
-    .icon-button { flex-shrink: 0; }
-
-    .stats-grid, .campaign-stats,
-    .automation-grid, .pipeline { grid-template-columns: 1fr; }
-
-    .page-heading { align-items: stretch; flex-direction: column; gap: 12px; }
-    .page-heading button, .page-heading .primary-btn { width: 100%; }
-    .welcome-card { padding: 18px; }
-    .welcome-card h2 { font-size: 19px; line-height: 1.3; }
-    .topbar h1 { font-size: 17px; }
-    .topbar p { font-size: 12px; }
-
-    .card, .stat-card, .automation-card, .lead-card { padding: 15px; border-radius: 11px; }
-    .card-header { gap: 10px; flex-wrap: wrap; }
-    .card-header h3 { font-size: 15px; }
-
-    .chat-window { min-height: 460px; }
-    .chat-body { min-height: 310px; padding: 12px; }
-    .chat-input { gap: 7px; }
-    .chat-input input, .chat-input textarea { min-width: 0; flex: 1; }
-
-    .modal { padding: 12px; align-items: flex-start; padding-top: 30px; }
-    .modal-box { width: 100%; max-height: calc(100vh - 45px); border-radius: 12px; }
-
-    .table-card { margin-left: -1px; margin-right: -1px; }
-    .table-card table { min-width: 560px; }
-}
-
-/* Très petits téléphones */
-@media (max-width: 380px) {
-    .content { padding: 12px 9px; }
-    .topbar { padding: 9px 10px; }
-    .welcome-card { padding: 15px; }
-    .primary-btn, .link-btn, .more-btn { font-size: 12px; }
-    .stat-card { padding: 13px; }
-    .modal { padding-left: 8px; padding-right: 8px; }
-}
-
-/* Paysage sur téléphone */
-@media (max-width: 800px) and (orientation: landscape) {
-    .topbar { min-height: 62px; }
-    .chat-window { min-height: 380px; }
-    .chat-body { min-height: 240px; }
-    .modal-box { max-height: calc(100vh - 20px); }
-}
-
-    
-/* ===== Responsive dashboard renforcé ===== */
-html, body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.app {
-    width: 100%;
-    min-width: 0;
-}
-
-.main {
-    min-width: 0;
-    overflow-x: hidden;
-}
-
-.content {
-    min-width: 0;
-    width: 100%;
-}
-
-.content > * {
-    min-width: 0;
-}
-
-.card, .table-card, .stats-grid, .charts-grid, .dashboard-grid,
-.form-grid, .settings-grid, .campaign-grid, .crm-grid {
-    min-width: 0;
-    max-width: 100%;
-}
-
-table {
-    width: 100%;
-}
-
-.table-card, .table-container {
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-img, svg, video, canvas {
-    max-width: 100%;
-    height: auto;
-}
-
-input, textarea, select, button {
-    max-width: 100%;
-}
-
-@media (max-width: 1100px) {
-    .sidebar {
-        width: 230px;
-    }
-
-    .main {
-        margin-left: 230px;
-        width: calc(100% - 230px);
-    }
-
-    .topbar {
-        padding: 0 24px;
-    }
-}
-
-@media (max-width: 900px) {
-    .sidebar {
-        width: 255px;
-        transform: translateX(-100%);
-        transition: transform .25s ease;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .main {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .topbar {
-        padding: 0 20px;
-        gap: 12px;
-    }
-
-    .mobile-menu {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .top-actions {
-        gap: 10px;
-    }
-
-    .user > div:last-child {
-        display: none;
-    }
-
-    .content {
-        padding: 24px 20px;
-    }
-}
-
-@media (max-width: 600px) {
-    .topbar {
-        height: auto;
-        min-height: 72px;
-        padding: 14px 16px;
-    }
-
-    .topbar h1 {
-        font-size: 18px;
-    }
-
-    .topbar p {
-        font-size: 11px;
-    }
-
-    .content {
-        padding: 18px 14px;
-    }
-
-    .top-actions {
-        margin-left: auto;
-    }
-
-    .icon-button {
-        width: 36px;
-        height: 36px;
-    }
-
-    .stats-grid,
-    .charts-grid,
-    .dashboard-grid,
-    .form-grid,
-    .settings-grid,
-    .campaign-grid,
-    .crm-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .card, .table-card {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .card-header {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .modal-box {
-        width: calc(100% - 28px);
-        max-height: calc(100vh - 28px);
-        overflow-y: auto;
-    }
-
-    .toast {
-        left: 14px;
-        right: 14px;
-        width: auto;
-        max-width: none;
-    }
-}
-
-@media (max-width: 420px) {
-    .sidebar {
-        width: min(255px, 88vw);
-    }
-
-    .content {
-        padding: 14px 10px;
-    }
-
-    .topbar {
-        padding: 12px 10px;
-    }
-
-    .topbar h1 {
-        font-size: 16px;
-    }
-
-    .topbar p {
-        display: none;
-    }
-}
-
-
-/* ===== FOOTER DASHBOARD ===== */
-.app-footer{
-    background:var(--footer-bg);
-    color:#aeb7c8;
-    margin-left:0;
-    width:100%;
-    overflow:hidden;
-    border-top:1px solid #163b2e;
-}
-
-.footer-inner{
-    width:100%;
-    max-width:1400px;
-    margin:0 auto;
-    padding:42px 35px 20px;
-}
-
-.footer-grid{
-    display:grid;
-    grid-template-columns:minmax(260px,2fr) repeat(3,minmax(150px,1fr));
-    gap:38px;
-    align-items:start;
-    width:100%;
-}
-
-.footer-brand,
-.footer-col{
-    min-width:0;
-}
-
-.footer-logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:14px;
-}
-
-.footer-logo-icon{
-    width:38px;
-    height:38px;
-    border-radius:10px;
-    background:var(--primary);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-    font-size:19px;
-    flex-shrink:0;
-}
-
-.footer-logo strong{
-    display:block;
-    color:#fff;
-    font-size:16px;
-}
-
-.footer-logo span{
-    display:block;
-    color:#778195;
-    font-size:10px;
-    margin-top:2px;
-}
-
-.footer-brand p{
-    max-width:330px;
-    font-size:12px;
-    line-height:1.7;
-    color:#778195;
-    overflow-wrap:anywhere;
-}
-
-.footer-col h4{
-    color:#fff;
-    font-size:12px;
-    margin:0 0 14px;
-}
-
-.footer-col a{
-    display:block;
-    color:#8792a6;
-    font-size:12px;
-    text-decoration:none;
-    margin-bottom:10px;
-    line-height:1.4;
-    overflow-wrap:anywhere;
-    transition:color .2s ease;
-}
-
-.footer-col a:hover{
-    color:#35d98f;
-}
-
-.footer-bottom{
-    margin-top:34px;
-    padding-top:18px;
-    border-top:1px solid #263143;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px 24px;
-    flex-wrap:wrap;
-    font-size:10px;
-    color:#667186;
-}
-
-.footer-bottom span{
-    min-width:0;
-    overflow-wrap:anywhere;
-}
-
-@media(max-width:1100px){
-    .footer-inner{
-        padding-left:24px;
-        padding-right:24px;
-    }
-
-    .footer-grid{
-        grid-template-columns:2fr repeat(3,1fr);
-        gap:25px;
-    }
-}
-
-@media(max-width:900px){
-    .app-footer{
-        margin-left:0;
-    }
-
-    .footer-inner{
-        padding:34px 20px 18px;
-    }
-
-    .footer-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:28px 24px;
-    }
-
-    .footer-brand{
-        grid-column:1 / -1;
-    }
-
-    .footer-brand p{
-        max-width:520px;
-    }
-}
-
-@media(max-width:560px){
-    .footer-inner{
-        padding:30px 16px 16px;
-    }
-
-    .footer-grid{
-        grid-template-columns:1fr;
-        gap:24px;
-    }
-
-    .footer-brand{
-        grid-column:auto;
-    }
-
-    .footer-brand p{
-        max-width:none;
-    }
-
-    .footer-bottom{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:7px;
-        margin-top:26px;
-    }
-}
-
-
-/* ===== PARAMÈTRES ===== */
-.settings-layout{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:20px;
-  width:100%;
-}
-.settings-card{
-  min-width:0;
-  background:var(--card,#151d2b);
-  border:1px solid var(--border,#263143);
-  border-radius:14px;
-  padding:22px;
-  color:#dfe5ef;
-}
-.settings-card-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:16px;
-  margin-bottom:20px;
-}
-.settings-card h3{margin:0 0 6px;font-size:15px;color:#fff;}
-.settings-card p{margin:0;color:#7e899d;font-size:12px;line-height:1.5;}
-.settings-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
-.settings-card label{display:flex;flex-direction:column;gap:7px;color:#aeb8c9;font-size:12px;min-width:0;}
-.settings-card input,.settings-card select,.settings-card textarea{
-  width:100%;
-  box-sizing:border-box;
-  background:#0f1623;
-  border:1px solid #2a3548;
-  border-radius:9px;
-  color:#e7edf7;
-  padding:11px 12px;
-  outline:none;
-  font:inherit;
-}
-.settings-card input:focus,.settings-card select:focus,.settings-card textarea:focus{border-color:var(--primary,#35d98f);}
-.settings-options{display:flex;flex-direction:column;gap:4px;}
-.setting-switch{
-  display:flex !important;
-  flex-direction:row !important;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  padding:13px 0;
-  border-bottom:1px solid #222c3c;
-}
-.setting-switch:last-child{border-bottom:0;}
-.setting-switch span{min-width:0;}
-.setting-switch b{display:block;color:#e8edf5;font-size:12px;margin-bottom:4px;}
-.setting-switch small{display:block;color:#758197;font-size:10px;line-height:1.4;}
-.setting-switch input{width:40px!important;height:21px;accent-color:var(--primary,#35d98f);flex:0 0 auto;}
-.status-pill{
-  white-space:nowrap;
-  color:#35d98f;
-  background:rgba(53,217,143,.09);
-  border:1px solid rgba(53,217,143,.22);
-  border-radius:20px;
-  padding:6px 10px;
-  font-size:10px;
-}
-.connection-box{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  padding:14px;
-  margin-bottom:16px;
-  background:#0f1623;
-  border:1px solid #273247;
-  border-radius:10px;
-}
-.connection-label{display:block;color:#718096;font-size:10px;margin-bottom:4px;}
-.connection-box strong{font-size:12px;color:#fff;}
-.secondary-btn,.danger-btn{
-  border:1px solid #344056;
-  background:#192334;
-  color:#dfe5ef;
-  border-radius:8px;
-  padding:9px 12px;
-  cursor:pointer;
-  white-space:nowrap;
-}
-.danger-card{grid-column:1/-1;}
-.danger-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
-.danger-btn{border-color:#6a3340;background:#281821;color:#ff9aa9;}
-@media(max-width:800px){
-  .settings-layout{grid-template-columns:1fr;}
-  .danger-card{grid-column:auto;}
-}
-@media(max-width:560px){
-  .settings-form{grid-template-columns:1fr;}
-  .settings-card{padding:17px;}
-  .settings-card-head{flex-direction:column;}
-  .connection-box{flex-direction:column;align-items:stretch;}
-  .connection-box button{width:100%;}
-  .danger-actions{flex-direction:column;}
-  .danger-actions button{width:100%;}
-}
-
-</style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhaBoost — Dashboard</title>
-    
-
-<style id="footer-layout-fix">
-/* ===== CORRECTION POSITION DU FOOTER ===== */
-body{
-    margin:0;
-    width:100%;
-    min-width:0;
-    overflow-x:hidden;
-}
-
-.app{
-    width:100%;
-    min-width:0;
-}
-
-/* Le footer est une zone indépendante sous le dashboard */
-.app-footer{
-    position:relative;
-    width:100%;
-    margin:0 !important;
-    margin-left:0 !important;
-    left:0 !important;
-    right:0 !important;
-    box-sizing:border-box;
-    clear:both;
-    overflow:hidden;
-}
-
-/* Sur desktop, le footer doit commencer après la sidebar,
-   mais son contenu doit rester entièrement visible. */
-@media(min-width:901px){
-    .app-footer{
-        width:calc(100% - 255px);
-        margin-left:255px !important;
-    }
-
-    .footer-inner{
-        width:100%;
-        max-width:none;
-        margin:0;
-        padding-left:35px;
-        padding-right:35px;
-        box-sizing:border-box;
-    }
-}
-
-/* Tablette */
-@media(min-width:601px) and (max-width:900px){
-    .app-footer{
-        width:100%;
-        margin-left:0 !important;
-    }
-
-    .footer-inner{
-        width:100%;
-        padding-left:24px;
-        padding-right:24px;
-    }
-}
-
-/* Téléphone */
-@media(max-width:600px){
-    .app-footer{
-        width:100vw;
-        max-width:100vw;
-        margin-left:0 !important;
-        margin-right:0 !important;
-    }
-
-    .footer-inner{
-        width:100%;
-        max-width:100%;
-        padding-left:16px;
-        padding-right:16px;
-        box-sizing:border-box;
-    }
-
-    .footer-grid{
-        width:100%;
-        grid-template-columns:1fr !important;
-    }
-
-    .footer-brand p{
-        max-width:100%;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhaBoost — Tableau de bord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#172A21; --ink-soft:#4F6357;
+  --bottle:#0F3D2E; --bottle-dark:#092A20;
+  --paper:#FAF6EC; --paper-dim:#F1ECDD; --sage:#E6EEE1;
+  --marigold:#E2A33B; --marigold-dark:#B97F1F;
+  --clay:#C1502E; --line:#DDD6C4; --white:#FFFFFF;
+  --shadow: 0 20px 50px -25px rgba(9,42,32,0.35);
+  --radius: 18px;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,.serif{font-family:'Fraunces',serif;color:var(--bottle-dark);font-weight:600;letter-spacing:-0.01em;margin:0;}
+button{font-family:inherit;cursor:pointer;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.55);}70%{box-shadow:0 0 0 9px rgba(37,211,102,0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ---------- Layout ---------- */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:240px;flex-shrink:0;background:var(--white);border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+.logo{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--bottle-dark);display:flex;align-items:center;gap:8px;padding:0 8px 22px;}
+.logo span{width:9px;height:9px;border-radius:50%;background:var(--marigold);}
+.nav{display:flex;flex-direction:column;gap:3px;flex:1;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;border:none;background:transparent;color:var(--ink-soft);font-size:14px;font-weight:600;text-align:left;transition:background .15s ease,color .15s ease;}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;}
+.nav-item:hover{background:var(--sage);color:var(--bottle-dark);}
+.nav-item.active{background:var(--bottle);color:#fff;}
+.sidebar-foot{border-top:1px solid var(--line);padding-top:14px;margin-top:10px;}
+.user-mini{display:flex;align-items:center;gap:10px;padding:6px 8px 12px;}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--marigold);color:var(--bottle-dark);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:14px;flex-shrink:0;}
+.user-mini strong{display:block;font-size:13px;color:var(--ink);}
+.user-mini small{color:var(--ink-soft);font-size:11.5px;}
+
+.main{flex:1;min-width:0;}
+.topbar{padding:24px 34px 0;}
+.topbar h1{font-size:23px;}
+.topbar p{color:var(--ink-soft);font-size:13.5px;margin-top:4px;}
+.content{padding:22px 34px 60px;max-width:980px;}
+.page{display:none;animation:fadeUp .35s ease both;}
+.page.active{display:block;}
+
+/* ---------- Cards ---------- */
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+.card + .card{margin-top:18px;}
+
+/* ---------- Welcome banner ---------- */
+.welcome{background:linear-gradient(120deg,var(--bottle),#163b2e);color:#fff;border-radius:20px;padding:28px 30px;position:relative;overflow:hidden;}
+.welcome::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(226,163,59,0.35),transparent 70%);}
+.welcome h2{color:#fff;font-size:22px;}
+.welcome p{color:#BFE0D2;font-size:13.5px;margin-top:6px;max-width:420px;}
+
+/* ---------- WhatsApp connection card ---------- */
+.wa-card{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.wa-icon{width:52px;height:52px;border-radius:16px;background:var(--sage);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.wa-icon svg{width:26px;height:26px;}
+.wa-status-dot{width:9px;height:9px;border-radius:50%;background:#25D366;display:inline-block;margin-right:6px;animation:pulseDot 2s infinite;}
+.wa-info h3{font-size:15.5px;}
+.wa-info p{margin:3px 0 0;font-size:13px;color:var(--ink-soft);}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:99px;font-weight:700;font-size:13.5px;border:1.5px solid transparent;transition:transform .15s ease,box-shadow .15s ease;text-decoration:none;}
+.btn-primary{background:var(--bottle);color:#fff;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 24px -12px rgba(15,61,46,.55);}
+.btn-ghost{background:transparent;color:var(--bottle-dark);border-color:var(--line);}
+.btn-ghost:hover{border-color:var(--bottle);}
+.btn-danger{background:transparent;color:var(--clay);border-color:var(--line);}
+.btn:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none;}
+
+/* ---------- Quick actions ---------- */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:18px;}
+.quick-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:18px;transition:transform .18s ease,box-shadow .18s ease;text-align:left;}
+.quick-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--marigold);}
+.quick-card .qi{width:36px;height:36px;border-radius:10px;background:var(--sage);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.quick-card h4{margin:0 0 4px;font-size:14px;font-family:'Manrope',sans-serif;font-weight:700;color:var(--ink);}
+.quick-card p{margin:0;font-size:12.5px;color:var(--ink-soft);}
+
+/* ---------- Contacts ---------- */
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.search{flex:1;min-width:180px;padding:11px 16px;border-radius:99px;border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;background:var(--white);}
+.contact-row{display:flex;align-items:center;gap:14px;padding:14px 6px;border-bottom:1px solid var(--line);animation:fadeUp .3s ease both;}
+.contact-row:last-child{border-bottom:none;}
+.contact-row .avatar{width:38px;height:38px;font-size:13px;}
+.contact-main{flex:1;min-width:0;}
+.contact-main strong{display:block;font-size:14px;}
+.contact-main span{font-size:12.5px;color:var(--ink-soft);}
+.tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--sage);color:var(--bottle-dark);}
+.empty-state{text-align:center;padding:44px 20px;color:var(--ink-soft);}
+.empty-state .ei{width:52px;height:52px;margin:0 auto 14px;border-radius:16px;background:var(--sage);display:flex;align-items:center;justify-content:center;}
+.empty-state h3{color:var(--bottle-dark);font-size:16px;margin-bottom:6px;}
+.empty-state p{font-size:13px;max-width:340px;margin:0 auto;}
+
+/* ---------- Coming soon pages ---------- */
+.soon{text-align:center;padding:60px 24px;}
+.soon .si{width:64px;height:64px;margin:0 auto 18px;border-radius:20px;background:var(--sage);display:flex;align-items:center;justify-content:center;animation:fadeUp .5s ease both;}
+.soon h2{font-size:20px;margin-bottom:8px;}
+.soon p{color:var(--ink-soft);font-size:13.5px;max-width:380px;margin:0 auto;}
+.soon .badge{display:inline-block;margin-top:16px;font-size:11.5px;font-weight:700;color:var(--marigold-dark);background:#FBF0DC;padding:6px 14px;border-radius:99px;}
+
+/* ---------- Settings ---------- */
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
+.field input{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;background:var(--paper);}
+.field input:focus{outline:none;border-color:var(--bottle);background:var(--white);}
+.field input:disabled{color:var(--ink-soft);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+
+/* ---------- Modal ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(9,42,32,.45);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:20px;padding:26px;width:100%;max-width:380px;animation:fadeUp .25s ease both;}
+.modal h3{font-size:17px;margin-bottom:16px;}
+
+/* ---------- Toast ---------- */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bottle-dark);color:#fff;padding:12px 22px;border-radius:99px;font-size:13px;font-weight:600;opacity:0;transition:all .25s ease;z-index:300;pointer-events:none;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .7s linear infinite;display:inline-block;}
+
+/* ---------- Mobile ---------- */
+.hamburger{display:none;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:9px 11px;position:fixed;top:14px;left:14px;z-index:150;}
+@media (max-width:880px){
+  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:140;transition:left .25s ease;box-shadow:0 0 0 9999px rgba(0,0,0,0);}
+  .sidebar.open{left:0;box-shadow:20px 0 50px -20px rgba(0,0,0,.25);}
+  .hamburger{display:block;}
+  .topbar{padding:64px 18px 0;}
+  .content{padding:18px 18px 60px;}
+  .two-col{grid-template-columns:1fr;}
 }
 </style>
-
 </head>
-
 <body>
 
+<button class="hamburger" id="hamburgerBtn">☰</button>
+
 <div class="app">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-
-        <div class="logo">
-            <div class="logo-icon">W</div>
-            <div>
-                <strong>WhaBoost</strong>
-                <span>Business Suite</span>
-            </div>
-        </div>
-
-        <nav>
-
-            <p class="menu-title">PRINCIPAL</p>
-
-            <button class="nav-item active" data-page="dashboard">
-                <span>📊</span> Tableau de bord
-            </button>
-
-            <button class="nav-item" data-page="contacts">
-                <span>👥</span> Contacts
-            </button>
-
-            <button class="nav-item" data-page="messages">
-                <span>💬</span> Messages
-            </button>
-
-            <button class="nav-item" data-page="scheduled">
-                <span>🕐</span> Programmés
-            </button>
-
-            <p class="menu-title">AUTOMATISATION</p>
-
-            <button class="nav-item" data-page="automation">
-                <span>🤖</span> Réponses automatiques
-            </button>
-
-            <button class="nav-item" data-page="campaigns">
-                <span>📢</span> Campagnes
-            </button>
-
-            <button class="nav-item" data-page="crm">
-                <span>🔄</span> CRM & Automatisation
-            </button>
-
-        </nav>
-
-        <div class="sidebar-bottom">
-            <button class="nav-item">
-                <span>⚙️</span> Paramètres
-            </button>
-
-            <div class="profile-mini">
-                <div class="avatar">DM</div>
-                <div>
-                    <strong>Donald</strong>
-                    <small>Administrateur</small>
-                </div>
-            </div>
-        </div>
-
-    </aside>
-
-
-    <!-- MAIN -->
-    <main class="main">
-
-        <!-- HEADER -->
-        <header class="topbar">
-
-            <button id="menuToggle" class="mobile-menu">☰</button>
-
-            <div>
-                <h1 id="pageTitle">Tableau de bord</h1>
-                <p id="pageSubtitle">Bienvenue dans votre espace WhaBoost</p>
-            </div>
-
-            <div class="top-actions">
-
-                <button class="icon-button" id="notificationButton">
-                    🔔
-                    <span class="notification-dot"></span>
-                </button>
-
-                <div class="user">
-                    <div class="avatar">DM</div>
-                    <div>
-                        <strong>Donald Medenou</strong>
-                        <small>Administrateur</small>
-                    </div>
-                </div>
-
-            </div>
-
-        </header>
-
-
-        <!-- CONTENT -->
-        <section class="content">
-
-
-            <!-- DASHBOARD -->
-            <div class="page active-page" id="dashboard">
-
-                <div class="welcome-card">
-
-                    <div>
-                        <span class="badge">● Système opérationnel</span>
-
-                        <h2>Boostez votre communication WhatsApp 🚀</h2>
-
-                        <p>
-                            Gérez vos contacts, automatisez vos messages
-                            et développez votre activité depuis un seul endroit.
-                        </p>
-
-                        <button class="primary-btn" onclick="showPage('campaigns')">
-                            + Créer une campagne
-                        </button>
-                    </div>
-
-                    <div class="welcome-icon">
-                        💬
-                    </div>
-
-                </div>
-
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-                        <div class="stat-icon blue">💬</div>
-                        <div>
-                            <span>Messages envoyés</span>
-                            <strong>12,580</strong>
-                            <small class="positive">↑ 18.4%</small>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon green">👥</div>
-                        <div>
-                            <span>Contacts</span>
-                            <strong id="contactCount">1,248</strong>
-                            <small class="positive">↑ 12.8%</small>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon purple">📢</div>
-                        <div>
-                            <span>Campagnes</span>
-                            <strong>24</strong>
-                            <small class="positive">↑ 8.2%</small>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon orange">📈</div>
-                        <div>
-                            <span>Taux de réponse</span>
-                            <strong>84.6%</strong>
-                            <small class="positive">↑ 5.3%</small>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="dashboard-grid">
-
-                    <div class="card chart-card">
-
-                        <div class="card-header">
-                            <div>
-                                <h3>Activité des messages</h3>
-                                <p>Messages envoyés cette semaine</p>
-                            </div>
-
-                            <select id="chartPeriod">
-                                <option>7 jours</option>
-                                <option>30 jours</option>
-                                <option>90 jours</option>
-                            </select>
-                        </div>
-
-                        <div class="chart">
-
-                            <div class="chart-y">
-                                <span>500</span>
-                                <span>400</span>
-                                <span>300</span>
-                                <span>200</span>
-                                <span>100</span>
-                                <span>0</span>
-                            </div>
-
-                            <div class="bars">
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:45%"></div>
-                                    <span>Lun</span>
-                                </div>
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:62%"></div>
-                                    <span>Mar</span>
-                                </div>
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:51%"></div>
-                                    <span>Mer</span>
-                                </div>
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:78%"></div>
-                                    <span>Jeu</span>
-                                </div>
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:68%"></div>
-                                    <span>Ven</span>
-                                </div>
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:88%"></div>
-                                    <span>Sam</span>
-                                </div>
-
-                                <div class="bar-column">
-                                    <div class="bar" style="height:73%"></div>
-                                    <span>Dim</span>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="card">
-
-                        <div class="card-header">
-                            <div>
-                                <h3>Campagnes récentes</h3>
-                                <p>Vos dernières campagnes</p>
-                            </div>
-
-                            <button class="link-btn" onclick="showPage('campaigns')">
-                                Voir tout
-                            </button>
-                        </div>
-
-                        <div class="campaign-list">
-
-                            <div class="campaign">
-                                <div class="campaign-icon">🎉</div>
-
-                                <div class="campaign-info">
-                                    <strong>Promotion été</strong>
-                                    <span>2,450 destinataires</span>
-                                </div>
-
-                                <span class="status success">Terminée</span>
-                            </div>
-
-                            <div class="campaign">
-                                <div class="campaign-icon">🛍️</div>
-
-                                <div class="campaign-info">
-                                    <strong>Nouvelle collection</strong>
-                                    <span>1,820 destinataires</span>
-                                </div>
-
-                                <span class="status running">En cours</span>
-                            </div>
-
-                            <div class="campaign">
-                                <div class="campaign-icon">🎁</div>
-
-                                <div class="campaign-info">
-                                    <strong>Offre spéciale</strong>
-                                    <span>950 destinataires</span>
-                                </div>
-
-                                <span class="status scheduled">Programmée</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CONTACTS -->
-            <div class="page" id="contacts">
-
-                <div class="page-heading">
-
-                    <div>
-                        <h2>Contacts</h2>
-                        <p>Gérez votre base de contacts WhatsApp.</p>
-                    </div>
-
-                    <button class="primary-btn" id="addContactBtn">
-                        + Ajouter un contact
-                    </button>
-
-                </div>
-
-
-                <div class="toolbar">
-
-                    <input
-                        type="text"
-                        id="contactSearch"
-                        placeholder="🔍 Rechercher un contact..."
-                    >
-
-                    <select>
-                        <option>Tous les contacts</option>
-                        <option>Clients</option>
-                        <option>Prospects</option>
-                        <option>VIP</option>
-                    </select>
-
-                </div>
-
-
-                <div class="card table-card">
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Contact</th>
-                                <th>Téléphone</th>
-                                <th>Groupe</th>
-                                <th>Statut</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="contactsTable">
-
-                            <tr>
-                                <td>
-                                    <div class="table-user">
-                                        <div class="avatar">JD</div>
-                                        <strong>Jean Dupont</strong>
-                                    </div>
-                                </td>
-                                <td>+229 97 00 00 01</td>
-                                <td>Clients</td>
-                                <td><span class="status success">Actif</span></td>
-                                <td><button class="more-btn">•••</button></td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="table-user">
-                                        <div class="avatar">AM</div>
-                                        <strong>Amélie Martin</strong>
-                                    </div>
-                                </td>
-                                <td>+229 97 00 00 02</td>
-                                <td>VIP</td>
-                                <td><span class="status success">Actif</span></td>
-                                <td><button class="more-btn">•••</button></td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="table-user">
-                                        <div class="avatar">KP</div>
-                                        <strong>Kevin Pierre</strong>
-                                    </div>
-                                </td>
-                                <td>+229 97 00 00 03</td>
-                                <td>Prospects</td>
-                                <td><span class="status warning">En attente</span></td>
-                                <td><button class="more-btn">•••</button></td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-
-            <!-- MESSAGES -->
-            <div class="page" id="messages">
-
-                <div class="page-heading">
-                    <div>
-                        <h2>Messages</h2>
-                        <p>Envoyez et gérez vos conversations.</p>
-                    </div>
-
-                    <button class="primary-btn" onclick="openMessageModal()">
-                        + Nouveau message
-                    </button>
-                </div>
-
-
-                <div class="message-layout">
-
-                    <div class="card conversation-list">
-
-                        <input
-                            type="text"
-                            placeholder="🔍 Rechercher..."
-                            class="conversation-search"
-                        >
-
-                        <div class="conversation active">
-                            <div class="avatar">JD</div>
-                            <div>
-                                <strong>Jean Dupont</strong>
-                                <p>Merci pour votre message !</p>
-                            </div>
-                            <small>12:42</small>
-                        </div>
-
-                        <div class="conversation">
-                            <div class="avatar">AM</div>
-                            <div>
-                                <strong>Amélie Martin</strong>
-                                <p>Bonjour, je voudrais...</p>
-                            </div>
-                            <small>11:28</small>
-                        </div>
-
-                        <div class="conversation">
-                            <div class="avatar">KP</div>
-                            <div>
-                                <strong>Kevin Pierre</strong>
-                                <p>Est-ce encore disponible ?</p>
-                            </div>
-                            <small>09:15</small>
-                        </div>
-
-                    </div>
-
-
-                    <div class="card chat-window">
-
-                        <div class="chat-header">
-
-                            <div class="table-user">
-                                <div class="avatar">JD</div>
-
-                                <div>
-                                    <strong>Jean Dupont</strong>
-                                    <small>● En ligne</small>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div class="chat-body">
-
-                            <div class="message received">
-                                Bonjour, j'aimerais avoir plus d'informations.
-                            </div>
-
-                            <div class="message sent">
-                                Bonjour Jean ! Bien sûr. Comment puis-je vous aider ?
-                            </div>
-
-                            <div class="message received">
-                                Je voudrais connaître vos tarifs.
-                            </div>
-
-                        </div>
-
-
-                        <div class="chat-input">
-
-                            <input
-                                type="text"
-                                id="messageInput"
-                                placeholder="Écrire un message..."
-                            >
-
-                            <button onclick="sendMessage()">➤</button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- PROGRAMMES -->
-            <div class="page" id="scheduled">
-
-                <div class="page-heading">
-                    <div>
-                        <h2>Messages programmés</h2>
-                        <p>Planifiez vos messages à l'avance.</p>
-                    </div>
-
-                    <button class="primary-btn" onclick="openScheduleModal()">
-                        + Programmer un message
-                    </button>
-                </div>
-
-
-                <div class="card table-card">
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Message</th>
-                                <th>Destinataires</th>
-                                <th>Date</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-                                <td>🎉 Offre spéciale du weekend</td>
-                                <td>450 contacts</td>
-                                <td>10 août 2026 — 09:00</td>
-                                <td><span class="status scheduled">Programmé</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>🛍️ Nouvelle collection disponible</td>
-                                <td>820 contacts</td>
-                                <td>12 août 2026 — 14:30</td>
-                                <td><span class="status scheduled">Programmé</span></td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-
-            <!-- AUTOMATION -->
-            <div class="page" id="automation">
-
-                <div class="page-heading">
-
-                    <div>
-                        <h2>Réponses automatiques</h2>
-                        <p>Automatisez les réponses aux messages reçus.</p>
-                    </div>
-
-                    <button class="primary-btn" onclick="addAutomation()">
-                        + Nouvelle règle
-                    </button>
-
-                </div>
-
-
-                <div class="automation-grid">
-
-                    <div class="automation-card">
-
-                        <div class="automation-top">
-                            <span class="automation-icon">👋</span>
-
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span></span>
-                            </label>
-                        </div>
-
-                        <h3>Message de bienvenue</h3>
-
-                        <p>
-                            Répond automatiquement aux nouveaux contacts.
-                        </p>
-
-                        <div class="rule">
-                            <strong>SI :</strong> nouveau message reçu
-                        </div>
-
-                        <div class="rule">
-                            <strong>ALORS :</strong> envoyer un message de bienvenue
-                        </div>
-
-                    </div>
-
-
-                    <div class="automation-card">
-
-                        <div class="automation-top">
-                            <span class="automation-icon">🕐</span>
-
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span></span>
-                            </label>
-                        </div>
-
-                        <h3>Hors horaires</h3>
-
-                        <p>
-                            Informe les clients lorsque vous êtes indisponible.
-                        </p>
-
-                        <div class="rule">
-                            <strong>SI :</strong> message reçu après 18h
-                        </div>
-
-                        <div class="rule">
-                            <strong>ALORS :</strong> envoyer un message d'absence
-                        </div>
-
-                    </div>
-
-
-                    <div class="automation-card">
-
-                        <div class="automation-top">
-                            <span class="automation-icon">❓</span>
-
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span></span>
-                            </label>
-                        </div>
-
-                        <h3>FAQ automatique</h3>
-
-                        <p>
-                            Répond aux questions fréquemment posées.
-                        </p>
-
-                        <div class="rule">
-                            <strong>SI :</strong> message contient "prix"
-                        </div>
-
-                        <div class="rule">
-                            <strong>ALORS :</strong> envoyer la grille tarifaire
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CAMPAGNES -->
-            <div class="page" id="campaigns">
-
-                <div class="page-heading">
-
-                    <div>
-                        <h2>Campagnes</h2>
-                        <p>Créez et analysez vos campagnes WhatsApp.</p>
-                    </div>
-
-                    <button class="primary-btn" onclick="openCampaignModal()">
-                        + Nouvelle campagne
-                    </button>
-
-                </div>
-
-
-                <div class="campaign-stats">
-
-                    <div class="mini-stat">
-                        <span>Campagnes totales</span>
-                        <strong>24</strong>
-                    </div>
-
-                    <div class="mini-stat">
-                        <span>Messages envoyés</span>
-                        <strong>12,580</strong>
-                    </div>
-
-                    <div class="mini-stat">
-                        <span>Taux de lecture</span>
-                        <strong>91.4%</strong>
-                    </div>
-
-                    <div class="mini-stat">
-                        <span>Taux de réponse</span>
-                        <strong>84.6%</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="card table-card">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Campagne</th>
-                                <th>Destinataires</th>
-                                <th>Envoyés</th>
-                                <th>Lecture</th>
-                                <th>Statut</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-                                <td>🎉 Promotion été</td>
-                                <td>2,450</td>
-                                <td>2,450</td>
-                                <td>94%</td>
-                                <td><span class="status success">Terminée</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>🛍️ Nouvelle collection</td>
-                                <td>1,820</td>
-                                <td>1,340</td>
-                                <td>89%</td>
-                                <td><span class="status running">En cours</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>🎁 Offre spéciale</td>
-                                <td>950</td>
-                                <td>0</td>
-                                <td>0%</td>
-                                <td><span class="status scheduled">Programmée</span></td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-
-            <!-- CRM -->
-            <div class="page" id="crm">
-
-                <div class="page-heading">
-
-                    <div>
-                        <h2>CRM & Automatisation</h2>
-                        <p>Suivez vos prospects et automatisez vos processus.</p>
-                    </div>
-
-                    <button class="primary-btn">
-                        + Ajouter un pipeline
-                    </button>
-
-                </div>
-
-
-                <div class="pipeline">
-
-                    <div class="pipeline-column">
-
-                        <div class="pipeline-title">
-                            <strong>Nouveaux prospects</strong>
-                            <span>3</span>
-                        </div>
-
-                        <div class="lead-card">
-                            <strong>Jean Dupont</strong>
-                            <p>Demande de prix</p>
-                            <small>Il y a 10 min</small>
-                        </div>
-
-                        <div class="lead-card">
-                            <strong>Sarah Ali</strong>
-                            <p>Produit disponible ?</p>
-                            <small>Il y a 25 min</small>
-                        </div>
-
-                    </div>
-
-
-                    <div class="pipeline-column">
-
-                        <div class="pipeline-title">
-                            <strong>Contactés</strong>
-                            <span>2</span>
-                        </div>
-
-                        <div class="lead-card">
-                            <strong>Kevin Pierre</strong>
-                            <p>En attente de réponse</p>
-                            <small>Il y a 1h</small>
-                        </div>
-
-                    </div>
-
-
-                    <div class="pipeline-column">
-
-                        <div class="pipeline-title">
-                            <strong>Qualifiés</strong>
-                            <span>2</span>
-                        </div>
-
-                        <div class="lead-card">
-                            <strong>Amélie Martin</strong>
-                            <p>Client VIP potentiel</p>
-                            <small>Hier</small>
-                        </div>
-
-                    </div>
-
-
-                    <div class="pipeline-column">
-
-                        <div class="pipeline-title">
-                            <strong>Clients</strong>
-                            <span>4</span>
-                        </div>
-
-                        <div class="lead-card">
-                            <strong>Entreprise ABC</strong>
-                            <p>Client actif</p>
-                            <small>Il y a 2 jours</small>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    
-<!-- PAGE PARAMÈTRES -->
-<section id="settings-page" class="dashboard-page" style="display:none;">
-  <div class="page-heading">
-    <div>
-      <h2>Paramètres</h2>
-      <p>Configurez votre compte et votre espace WhaBoost.</p>
-    </div>
-    <button class="primary-btn" type="button" onclick="saveSettings()">Enregistrer les modifications</button>
-  </div>
-
-  <div class="settings-layout">
-    <div class="settings-card">
-      <div class="settings-card-head">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo"><span></span>WhaBoost</div>
+    <nav class="nav">
+      <button class="nav-item active" data-page="overview">🏠 Vue d'ensemble</button>
+      <button class="nav-item" data-page="contacts">👥 Contacts</button>
+      <button class="nav-item" data-page="messages">💬 Messages</button>
+      <button class="nav-item" data-page="campaigns">📣 Campagnes</button>
+      <button class="nav-item" data-page="settings">⚙️ Paramètres</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-mini">
+        <div class="avatar" id="sidebarAvatar">?</div>
         <div>
-          <h3>Profil de l'entreprise</h3>
-          <p>Les informations affichées dans votre espace.</p>
+          <strong id="sidebarName">Mon compte</strong>
+          <small id="sidebarEmail">…</small>
         </div>
       </div>
-      <div class="settings-form">
-        <label>Nom de l'entreprise
-          <input id="companyName" type="text" value="WhaBoost">
-        </label>
-        <label>Nom du responsable
-          <input id="managerName" type="text" value="Donald Medenou">
-        </label>
-        <label>Email
-          <input id="accountEmail" type="email" value="contact@whatsboost.com">
-        </label>
-        <label>Numéro WhatsApp
-          <input id="accountPhone" type="tel" value="+229 00 00 00 00">
-        </label>
-        <label>Secteur d'activité
-          <select id="businessSector">
-            <option>Commerce</option>
-            <option>Services</option>
-            <option>Marketing</option>
-            <option>Éducation</option>
-            <option>Autre</option>
-          </select>
-        </label>
-      </div>
+      <button class="nav-item" id="logoutBtn">🚪 Se déconnecter</button>
     </div>
+  </aside>
 
-    <div class="settings-card">
-      <div class="settings-card-head">
-        <div>
-          <h3>Notifications</h3>
-          <p>Choisissez les alertes que vous souhaitez recevoir.</p>
+  <main class="main">
+    <!-- ===== VUE D'ENSEMBLE ===== -->
+    <section class="page active" id="page-overview">
+      <div class="topbar">
+        <h1 id="greeting">Bonjour 👋</h1>
+        <p>Voici l'essentiel de votre compte WhaBoost.</p>
+      </div>
+      <div class="content">
+        <div class="welcome">
+          <h2>Bienvenue sur WhaBoost</h2>
+          <p>Centralisez vos conversations WhatsApp, gérez vos contacts et encaissez en Mobile Money — tout depuis un seul endroit.</p>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <div class="wa-card">
+            <div class="wa-icon" id="waIcon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Z" stroke="#0F3D2E" stroke-width="1.6"/><path d="M8.5 8.7c.2-.5.4-.5.7-.5h.5c.2 0 .4 0 .6.4.2.5.6 1.5.6 1.6.1.1.1.3 0 .4-.1.2-.2.3-.3.4-.1.1-.3.3-.4.4-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1 .2-.3.4-.2.6-.1l1.5.7c.2.1.4.2.4.3.1.2.1.9-.2 1.5-.3.7-1.5 1.3-2.1 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3 0-1.4.8-2.1 1-2.4Z" fill="#0F3D2E"/></svg>
+            </div>
+            <div class="wa-info" style="flex:1;">
+              <h3 id="waTitle">Vérification de la connexion WhatsApp…</h3>
+              <p id="waSubtitle">Un instant.</p>
+            </div>
+            <button class="btn btn-primary" id="waConnectBtnOverview" style="display:none;">Connecter mon WhatsApp</button>
+          </div>
+        </div>
+
+        <div class="quick-grid">
+          <button class="quick-card" data-page="contacts">
+            <div class="qi">👥</div>
+            <h4>Ajouter un contact</h4>
+            <p>Enregistrez un client dans votre carnet WhaBoost.</p>
+          </button>
+          <button class="quick-card" data-page="settings">
+            <div class="qi">🏢</div>
+            <h4>Profil de l'entreprise</h4>
+            <p>Nom, responsable, numéro — à jour pour vos clients.</p>
+          </button>
+          <button class="quick-card" data-page="messages">
+            <div class="qi">💬</div>
+            <h4>Boîte de réception</h4>
+            <p>Vos conversations WhatsApp arriveront ici.</p>
+          </button>
         </div>
       </div>
-      <div class="settings-options">
-        <label class="setting-switch"><span><b>Nouveaux messages</b><small>Recevoir une alerte lors d'un nouveau message.</small></span><input type="checkbox" checked></label>
-        <label class="setting-switch"><span><b>Nouveaux contacts</b><small>Être averti lorsqu'un contact est ajouté.</small></span><input type="checkbox" checked></label>
-        <label class="setting-switch"><span><b>Campagnes terminées</b><small>Recevoir le résumé de vos campagnes.</small></span><input type="checkbox" checked></label>
-        <label class="setting-switch"><span><b>Rapports hebdomadaires</b><small>Recevoir les statistiques de votre activité.</small></span><input type="checkbox"></label>
-      </div>
-    </div>
+    </section>
 
-    <div class="settings-card">
-      <div class="settings-card-head">
-        <div>
-          <h3>WhatsApp</h3>
-          <p>Paramètres de votre connexion WhatsApp.</p>
-        </div>
-        <span class="status-pill">● Connecté</span>
+    <!-- ===== CONTACTS ===== -->
+    <section class="page" id="page-contacts">
+      <div class="topbar">
+        <h1>Contacts</h1>
+        <p>Votre carnet de clients et prospects.</p>
       </div>
-      <div class="connection-box">
-        <div><span class="connection-label">Compte connecté</span><strong>WhaBoost Business</strong></div>
-        <button class="secondary-btn" type="button" onclick="showToast('Votre compte WhatsApp est connecté.')">Vérifier la connexion</button>
-      </div>
-      <label>Nom affiché
-        <input type="text" value="WhaBoost Business">
-      </label>
-      <label>Signature des messages
-        <textarea rows="3">Merci pour votre message. Nous vous répondrons rapidement.</textarea>
-      </label>
-    </div>
-
-    <div class="settings-card">
-      <div class="settings-card-head">
-        <div>
-          <h3>Préférences</h3>
-          <p>Personnalisez votre expérience.</p>
+      <div class="content">
+        <div class="card">
+          <div class="toolbar">
+            <input class="search" id="contactSearch" placeholder="Rechercher un contact…">
+            <button class="btn btn-primary" id="openAddContact">+ Ajouter un contact</button>
+          </div>
+          <div id="contactsList">
+            <div class="empty-state"><div class="ei">👥</div><h3>Chargement…</h3></div>
+          </div>
         </div>
       </div>
-      <div class="settings-form">
-        <label>Langue
-          <select><option>Français</option><option>English</option></select>
-        </label>
-        <label>Fuseau horaire
-          <select><option>Afrique/Porto-Novo</option><option>UTC</option></select>
-        </label>
-        <label>Format des dates
-          <select><option>JJ/MM/AAAA</option><option>MM/JJ/AAAA</option></select>
-        </label>
-        <label>Thème
-          <select><option>Sombre</option><option>Clair</option><option>Système</option></select>
-        </label>
-      </div>
-    </div>
+    </section>
 
-    <div class="settings-card danger-card">
-      <div>
-        <h3>Zone sensible</h3>
-        <p>Actions importantes concernant votre compte.</p>
+    <!-- ===== MESSAGES ===== -->
+    <section class="page" id="page-messages">
+      <div class="topbar"><h1>Messages</h1><p>Votre boîte de réception WhatsApp.</p></div>
+      <div class="content">
+        <div class="card">
+          <div class="soon">
+            <div class="si">💬</div>
+            <h2>La boîte de réception arrive bientôt</h2>
+            <p>Une fois votre numéro WhatsApp connecté, toutes vos conversations avec vos clients apparaîtront ici, en direct.</p>
+            <span class="badge">En cours de construction</span>
+          </div>
+        </div>
       </div>
-      <div class="danger-actions">
-        <button class="secondary-btn" type="button" onclick="showToast('La sauvegarde de sécurité est disponible dans votre espace.')">Exporter mes données</button>
-        <button class="danger-btn" type="button" onclick="showToast('Cette action nécessite une confirmation.')">Déconnecter tous les appareils</button>
+    </section>
+
+    <!-- ===== CAMPAGNES ===== -->
+    <section class="page" id="page-campaigns">
+      <div class="topbar"><h1>Campagnes</h1><p>Envoyez un message à plusieurs clients d'un coup.</p></div>
+      <div class="content">
+        <div class="card">
+          <div class="soon">
+            <div class="si">📣</div>
+            <h2>Les campagnes arrivent bientôt</h2>
+            <p>Vous pourrez bientôt envoyer une promotion ou une relance à toute une liste de contacts en un clic.</p>
+            <span class="badge">En cours de construction</span>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <!-- ===== PARAMÈTRES ===== -->
+    <section class="page" id="page-settings">
+      <div class="topbar"><h1>Paramètres</h1><p>Votre entreprise et votre connexion WhatsApp.</p></div>
+      <div class="content">
+        <div class="card">
+          <h3 style="margin-bottom:16px;">Profil de l'entreprise</h3>
+          <div class="two-col">
+            <div class="field"><label>Nom de l'entreprise</label><input id="companyName" placeholder="Ma Boutique"></div>
+            <div class="field"><label>Responsable</label><input id="managerName" placeholder="Votre nom"></div>
+            <div class="field"><label>Email du compte</label><input id="accountEmail" disabled></div>
+            <div class="field"><label>Téléphone de contact</label><input id="accountPhone" placeholder="+229 …"></div>
+          </div>
+          <button class="btn btn-primary" id="saveSettingsBtn">Enregistrer</button>
+        </div>
+
+        <div class="card">
+          <div class="wa-card">
+            <div class="wa-icon" id="waIconSettings">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Z" stroke="#0F3D2E" stroke-width="1.6"/></svg>
+            </div>
+            <div class="wa-info" style="flex:1;">
+              <h3>Connexion WhatsApp</h3>
+              <p id="waSettingsText">Vérification…</p>
+            </div>
+            <div id="waSettingsActions"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal ajout contact -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <h3>Ajouter un contact</h3>
+    <div class="field"><label>Nom complet</label><input id="newName" placeholder="Ex. Klodeen Agbakou"></div>
+    <div class="field"><label>Téléphone</label><input id="newPhone" placeholder="+229 …"></div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="btn btn-primary" id="submitContact" style="flex:1;justify-content:center;">Ajouter</button>
+      <button class="btn btn-ghost" id="cancelContact">Annuler</button>
     </div>
   </div>
-</section>
-
-</main>
-
 </div>
 
+<div id="toast"></div>
 
-<!-- MODAL CONTACT -->
-
-<div class="modal" id="contactModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-            <h3>Ajouter un contact</h3>
-            <button onclick="closeModal('contactModal')">×</button>
-        </div>
-
-        <input id="newName" placeholder="Nom complet">
-
-        <input id="newPhone" placeholder="Numéro WhatsApp">
-
-        <select id="newGroup">
-            <option>Clients</option>
-            <option>Prospects</option>
-            <option>VIP</option>
-        </select>
-
-        <button class="primary-btn full" onclick="addContact()">
-            Ajouter le contact
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- MODAL CAMPAGNE -->
-
-<div class="modal" id="campaignModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-            <h3>Nouvelle campagne</h3>
-            <button onclick="closeModal('campaignModal')">×</button>
-        </div>
-
-        <input id="campaignName" placeholder="Nom de la campagne">
-
-        <textarea
-            id="campaignMessage"
-            placeholder="Votre message..."
-        ></textarea>
-
-        <select>
-            <option>Tous les contacts</option>
-            <option>Clients</option>
-            <option>Prospects</option>
-            <option>VIP</option>
-        </select>
-
-        <button class="primary-btn full" onclick="createCampaign()">
-            Créer la campagne
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- MODAL MESSAGE -->
-
-<div class="modal" id="messageModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-            <h3>Nouveau message</h3>
-            <button onclick="closeModal('messageModal')">×</button>
-        </div>
-
-        <input placeholder="Numéro du destinataire">
-
-        <textarea
-            placeholder="Écrire votre message..."
-        ></textarea>
-
-        <button class="primary-btn full" onclick="sendNewMessage()">
-            Envoyer
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- TOAST -->
-
-<div id="toast" class="toast">
-    Action effectuée avec succès !
-</div>
-
-
-
-
-<script>
-        /* =========================
-   NAVIGATION
-========================= */
-
-const navItems = document.querySelectorAll(".nav-item[data-page]");
-const pages = document.querySelectorAll(".page");
-
-const pageTitles = {
-    dashboard: "Tableau de bord",
-    contacts: "Contacts",
-    messages: "Messages",
-    scheduled: "Messages programmés",
-    automation: "Réponses automatiques",
-    campaigns: "Campagnes",
-    crm: "CRM & Automatisation"
-};
-
-const pageSubtitles = {
-    settings: "Configurez votre compte et votre espace WhaBoost",
-    dashboard: "Bienvenue dans votre espace WhaBoost",
-    contacts: "Gérez votre base de contacts WhatsApp.",
-    messages: "Envoyez et gérez vos conversations.",
-    scheduled: "Planifiez vos messages à l'avance.",
-    automation: "Automatisez les réponses aux messages reçus.",
-    campaigns: "Créez et analysez vos campagnes WhatsApp.",
-    crm: "Suivez vos prospects et automatisez vos processus."
-};
-
-
-function showPage(pageId) {
-
-    pages.forEach(page => {
-        page.classList.remove("active-page");
-    });
-
-    const selectedPage = document.getElementById(pageId);
-
-    if (selectedPage) {
-        selectedPage.classList.add("active-page");
-    }
-
-    navItems.forEach(item => {
-        item.classList.remove("active");
-
-        if (item.dataset.page === pageId) {
-            item.classList.add("active");
-        }
-    });
-
-    document.getElementById("pageTitle").textContent =
-        pageTitles[pageId] || "WhaBoost";
-
-    document.getElementById("pageSubtitle").textContent =
-        pageSubtitles[pageId] || "";
-
-    document.querySelector(".sidebar").classList.remove("open");
-}
-
-
-navItems.forEach(item => {
-
-    item.addEventListener("click", () => {
-
-        const pageId = item.dataset.page;
-
-        showPage(pageId);
-
-    });
-
-});
-
-
-/* =========================
-   MOBILE MENU
-========================= */
-
-document.getElementById("menuToggle").addEventListener("click", () => {
-
-    document.querySelector(".sidebar").classList.toggle("open");
-
-});
-
-
-/* =========================
-   TOAST
-========================= */
-
-function showToast(message) {
-
-    const toast = document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 2500);
-
-}
-
-
-/* =========================
-   MODALS
-========================= */
-
-function openModal(id) {
-
-    document.getElementById(id).classList.add("show");
-
-}
-
-
-function closeModal(id) {
-
-    document.getElementById(id).classList.remove("show");
-
-}
-
-
-document.querySelectorAll(".modal").forEach(modal => {
-
-    modal.addEventListener("click", event => {
-
-        if (event.target === modal) {
-
-            modal.classList.remove("show");
-
-        }
-
-    });
-
-});
-
-
-/* =========================
-   CONTACTS
-========================= */
-
-document
-    .getElementById("addContactBtn")
-    .addEventListener("click", () => {
-
-        openModal("contactModal");
-
-    });
-
-
-function addContact() {
-
-    const name = document.getElementById("newName").value.trim();
-
-    const phone = document.getElementById("newPhone").value.trim();
-
-    const group = document.getElementById("newGroup").value;
-
-    if (!name || !phone) {
-
-        showToast("Veuillez remplir tous les champs.");
-
-        return;
-
-    }
-
-    const initials = name
-        .split(" ")
-        .map(word => word[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
-
-
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-
-        <td>
-
-            <div class="table-user">
-
-                <div class="avatar">
-                    ${initials}
-                </div>
-
-                <strong>
-                    ${name}
-                </strong>
-
-            </div>
-
-        </td>
-
-        <td>
-            ${phone}
-        </td>
-
-        <td>
-            ${group}
-        </td>
-
-        <td>
-            <span class="status success">
-                Actif
-            </span>
-        </td>
-
-        <td>
-            <button class="more-btn">
-                •••
-            </button>
-        </td>
-
-    `;
-
-
-    document
-        .getElementById("contactsTable")
-        .appendChild(row);
-
-
-    document.getElementById("newName").value = "";
-
-    document.getElementById("newPhone").value = "";
-
-
-    closeModal("contactModal");
-
-    showToast("Contact ajouté avec succès.");
-
-}
-
-
-/* =========================
-   SEARCH CONTACTS
-========================= */
-
-document
-    .getElementById("contactSearch")
-    .addEventListener("input", function () {
-
-        const search = this.value.toLowerCase();
-
-        const rows = document.querySelectorAll(
-            "#contactsTable tr"
-        );
-
-        rows.forEach(row => {
-
-            const text = row.textContent.toLowerCase();
-
-            row.style.display =
-                text.includes(search)
-                    ? ""
-                    : "none";
-
-        });
-
-    });
-
-
-/* =========================
-   CHAT
-========================= */
-
-function sendMessage() {
-
-    const input = document.getElementById("messageInput");
-
-    const text = input.value.trim();
-
-    if (!text) {
-
-        return;
-
-    }
-
-
-    const message = document.createElement("div");
-
-    message.className = "message sent";
-
-    message.textContent = text;
-
-
-    document
-        .querySelector(".chat-body")
-        .appendChild(message);
-
-
-    input.value = "";
-
-
-    const chatBody = document.querySelector(".chat-body");
-
-    chatBody.scrollTop = chatBody.scrollHeight;
-
-}
-
-
-document
-    .getElementById("messageInput")
-    .addEventListener("keydown", event => {
-
-        if (event.key === "Enter") {
-
-            sendMessage();
-
-        }
-
-    });
-
-
-/* =========================
-   NEW MESSAGE
-========================= */
-
-function openMessageModal() {
-
-    openModal("messageModal");
-
-}
-
-
-function sendNewMessage() {
-
-    closeModal("messageModal");
-
-    showToast("Message envoyé avec succès.");
-
-}
-
-
-/* =========================
-   SCHEDULE
-========================= */
-
-function openScheduleModal() {
-
-    showToast(
-        "Le planificateur sera ajouté dans la prochaine version."
-    );
-
-}
-
-
-/* =========================
-   CAMPAIGN
-========================= */
-
-function openCampaignModal() {
-
-    openModal("campaignModal");
-
-}
-
-
-function createCampaign() {
-
-    const name =
-        document.getElementById("campaignName").value.trim();
-
-    const message =
-        document.getElementById("campaignMessage").value.trim();
-
-
-    if (!name || !message) {
-
-        showToast("Veuillez remplir les informations.");
-
-        return;
-
-    }
-
-
-    closeModal("campaignModal");
-
-    document.getElementById("campaignName").value = "";
-
-    document.getElementById("campaignMessage").value = "";
-
-
-    showToast(
-        "Campagne créée avec succès."
-    );
-
-}
-
-
-/* =========================
-   AUTOMATION
-========================= */
-
-function addAutomation() {
-
-    showToast(
-        "Création d'une nouvelle règle d'automatisation."
-    );
-
-}
-
-
-/* =========================
-   NOTIFICATIONS
-========================= */
-
-document
-    .getElementById("notificationButton")
-    .addEventListener("click", () => {
-
-        showToast(
-            "Vous avez 3 nouvelles notifications."
-        );
-
-    });
-
-
-/* =========================
-   CHART
-========================= */
-
-document
-    .getElementById("chartPeriod")
-    .addEventListener("change", function () {
-
-        showToast(
-            "Période changée : " + this.value
-        );
-
-    });
-    </script>
-
-
-<!-- FOOTER DASHBOARD -->
-<footer class="app-footer">
-    <div class="footer-inner">
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <div class="footer-logo">
-                    <div class="footer-logo-icon">W</div>
-                    <div>
-                        <strong>WhaBoost</strong>
-                        <span>Business Suite</span>
-                    </div>
-                </div>
-                <p>
-                    Gérez vos contacts, messages, campagnes et automatisations
-                    WhatsApp depuis un seul espace.
-                </p>
-            </div>
-
-            <div class="footer-col">
-                <h4>Plateforme</h4>
-                <a href="#" onclick="showPage('dashboard');return false;">Tableau de bord</a>
-                <a href="#" onclick="showPage('contacts');return false;">Contacts</a>
-                <a href="#" onclick="showPage('messages');return false;">Messages</a>
-                <a href="#" onclick="showPage('scheduled');return false;">Programmés</a>
-            </div>
-
-            <div class="footer-col">
-                <h4>Automatisation</h4>
-                <a href="#" onclick="showPage('automation');return false;">Réponses automatiques</a>
-                <a href="#" onclick="showPage('campaigns');return false;">Campagnes</a>
-                <a href="#" onclick="showPage('crm');return false;">CRM & Automatisation</a>
-            </div>
-
-            <div class="footer-col">
-                <h4>Compte</h4>
-                <a href="#" onclick="showPage('settings');return false;">Paramètres</a>
-                <a href="#">Aide & Support</a>
-                <a href="#">Confidentialité</a>
-                <a href="#">Conditions d'utilisation</a>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <span>© 2026 WhaBoost. Tous droits réservés.</span>
-            <span>Business Suite · Gestion WhatsApp</span>
-        </div>
-    </div>
-</footer>
-
-
-<script id="settingsNavHandler">
-document.addEventListener("DOMContentLoaded", function(){
-  const buttons = Array.from(document.querySelectorAll(".sidebar-bottom .nav-item"));
-  const settingsButton = buttons.find(b => b.textContent.includes("Paramètres"));
-  const settingsPage = document.getElementById("settings-page");
-  if(settingsButton && settingsPage){
-    settingsButton.id = "settingsNavHandlerButton";
-    settingsButton.addEventListener("click", function(){
-      document.querySelectorAll(".dashboard-page").forEach(p => p.style.display="none");
-      settingsPage.style.display="block";
-      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-      settingsButton.classList.add("active");
-      window.scrollTo({top:0,behavior:"smooth"});
-    });
-  }
-});
-function saveSettings(){
-  if(typeof showToast === "function"){
-    showToast("Paramètres enregistrés avec succès.");
-  }
-}
-</script>
-
-<!-- ============================================================
-     CONNEXION AUX VRAIES DONNÉES (Supabase + backend WhaBoost)
-     Ce bloc redéfinit addContact() et saveSettings() ci-dessus
-     pour qu'ils parlent au vrai serveur au lieu de la démo visuelle.
-============================================================= -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script id="whaboostRealData">
+<script>
 (function(){
   const BACKEND_URL = 'https://whaboost-server.onrender.com';
   const SUPABASE_URL = 'https://eloklrhoqqesbcqbtidz.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2tscmhvcXFlc2JjcWJ0aWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MjM4NzUsImV4cCI6MjEwNDk5OTg3NX0.aQtZKneDEIXuxARe1kwgBxQgDRR2itfzhpk7psgcKB8';
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   let accessToken = null;
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._h);
+    t._h = setTimeout(() => t.classList.remove('show'), 3200);
+  }
 
   async function api(path, options = {}) {
     const res = await fetch(BACKEND_URL + path, {
@@ -3403,60 +344,74 @@ function saveSettings(){
     return name.trim().split(/\s+/).map(w => w[0]).join('').substring(0,2).toUpperCase();
   }
 
-  function renderContacts(contacts){
-    const tbody = document.getElementById('contactsTable');
-    if(!tbody) return;
-    if(!contacts || contacts.length === 0){
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#8a94a6;padding:24px;">Aucun contact pour l\'instant — ajoutez le premier avec le bouton ci-dessus.</td></tr>';
+  /* ---------- Navigation ---------- */
+  const navItems = document.querySelectorAll('.nav-item[data-page], .quick-card[data-page]');
+  function goTo(page){
+    document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
+    document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+    document.getElementById('sidebar').classList.remove('open');
+  }
+  navItems.forEach(el => el.addEventListener('click', () => goTo(el.dataset.page)));
+  document.getElementById('hamburgerBtn').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+
+  /* ---------- Contacts ---------- */
+  function renderContacts(contacts, filter){
+    const list = document.getElementById('contactsList');
+    const filtered = filter
+      ? contacts.filter(c => (c.full_name || '').toLowerCase().includes(filter) || (c.phone_number || '').includes(filter))
+      : contacts;
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state"><div class="ei">👥</div><h3>Aucun contact${filter ? ' trouvé' : ' pour l\'instant'}</h3><p>${filter ? 'Essayez un autre nom ou numéro.' : 'Ajoutez votre premier client avec le bouton ci-dessus.'}</p></div>`;
       return;
     }
-    tbody.innerHTML = contacts.map(c => `
-      <tr>
-        <td><div class="table-user"><div class="avatar">${initials(c.full_name)}</div><strong>${c.full_name}</strong></div></td>
-        <td>${c.phone_number}</td>
-        <td>${c.segment || '—'}</td>
-        <td><span class="status success">Actif</span></td>
-        <td><button class="more-btn">•••</button></td>
-      </tr>
+    list.innerHTML = filtered.map(c => `
+      <div class="contact-row">
+        <div class="avatar">${initials(c.full_name)}</div>
+        <div class="contact-main">
+          <strong>${c.full_name}</strong>
+          <span>${c.phone_number}</span>
+        </div>
+        ${c.segment ? `<span class="tag">${c.segment}</span>` : ''}
+      </div>
     `).join('');
   }
 
+  let allContacts = [];
   async function loadContacts(){
     try {
       const { contacts } = await api('/api/contacts');
-      renderContacts(contacts);
+      allContacts = contacts || [];
+      renderContacts(allContacts, '');
     } catch (err) {
-      const tbody = document.getElementById('contactsTable');
-      if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#c1502e;padding:24px;">Impossible de charger les contacts : ' + err.message + '</td></tr>';
+      document.getElementById('contactsList').innerHTML =
+        `<div class="empty-state"><div class="ei">⚠️</div><h3>Connexion au serveur…</h3><p>${err.message} — le serveur gratuit se réveille parfois en quelques secondes, réessayez.</p></div>`;
     }
   }
+  document.getElementById('contactSearch').addEventListener('input', (e) => {
+    renderContacts(allContacts, e.target.value.trim().toLowerCase());
+  });
 
-  // Remplace la version "démo" d'addContact() définie plus haut dans la page.
-  window.addContact = async function(){
+  const contactModal = document.getElementById('contactModal');
+  document.getElementById('openAddContact').addEventListener('click', () => contactModal.classList.add('open'));
+  document.getElementById('cancelContact').addEventListener('click', () => contactModal.classList.remove('open'));
+  document.getElementById('submitContact').addEventListener('click', async () => {
     const nameInput = document.getElementById('newName');
     const phoneInput = document.getElementById('newPhone');
-    const groupSelect = document.getElementById('newGroup');
     const name = nameInput.value.trim();
     const phone = phoneInput.value.trim();
-    if(!name || !phone){
-      showToast('Veuillez remplir tous les champs.');
-      return;
-    }
+    if (!name || !phone) { toast('Nom et téléphone sont requis.'); return; }
     try {
-      await api('/api/contacts', {
-        method: 'POST',
-        body: JSON.stringify({ full_name: name, phone_number: phone, segment: groupSelect ? groupSelect.value : null }),
-      });
-      nameInput.value = '';
-      phoneInput.value = '';
-      closeModal('contactModal');
-      showToast('Contact ajouté.');
+      await api('/api/contacts', { method: 'POST', body: JSON.stringify({ full_name: name, phone_number: phone }) });
+      nameInput.value = ''; phoneInput.value = '';
+      contactModal.classList.remove('open');
+      toast('Contact ajouté ✅');
       loadContacts();
     } catch (err) {
-      showToast('Erreur : ' + err.message);
+      toast('Erreur : ' + err.message);
     }
-  };
+  });
 
+  /* ---------- Profil ---------- */
   async function loadProfile(){
     try {
       const { profile } = await api('/api/profile');
@@ -3466,64 +421,98 @@ function saveSettings(){
       set('accountEmail', profile.email);
       set('accountPhone', profile.phone);
 
-      const displayName = profile.full_name || profile.email || 'Mon compte';
-      document.querySelectorAll('.user strong, .profile-mini strong').forEach(el => el.textContent = displayName);
-      document.querySelectorAll('.user .avatar, .profile-mini .avatar').forEach(el => el.textContent = initials(displayName));
+      const displayName = profile.full_name || profile.company_name || (profile.email ? profile.email.split('@')[0] : 'Mon compte');
+      document.getElementById('sidebarName').textContent = displayName;
+      document.getElementById('sidebarEmail').textContent = profile.email || '';
+      document.getElementById('sidebarAvatar').textContent = initials(displayName);
+      document.getElementById('greeting').textContent = 'Bonjour, ' + displayName.split(' ')[0] + ' 👋';
     } catch (err) {
       console.warn('Profil non chargé :', err.message);
     }
   }
 
-  // Remplace la version "démo" de saveSettings() définie plus haut dans la page.
-  // Le champ "Numéro WhatsApp" des Paramètres sert ici de numéro WhatsApp
-  // Business de l'entreprise (l'intégration Meta WhatsApp Cloud API viendra
-  // ensuite pour l'envoi/réception réels — ce champ enregistre déjà la donnée).
-  window.saveSettings = async function(){
-    const val = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : undefined; };
+  document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+    const val = (id) => document.getElementById(id).value.trim();
     try {
       await api('/api/profile', {
         method: 'PATCH',
-        body: JSON.stringify({
-          company_name: val('companyName'),
-          full_name: val('managerName'),
-          phone: val('accountPhone'),
-        }),
+        body: JSON.stringify({ company_name: val('companyName'), full_name: val('managerName'), phone: val('accountPhone') }),
       });
-      showToast('Paramètres enregistrés avec succès.');
+      toast('Paramètres enregistrés ✅');
+      loadProfile();
     } catch (err) {
-      showToast('Erreur : ' + err.message);
+      toast('Erreur : ' + err.message);
     }
-  };
+  });
 
-  function addLogoutButton(){
-    const bottom = document.querySelector('.sidebar-bottom');
-    if(!bottom || document.getElementById('logoutBtn')) return;
-    const btn = document.createElement('button');
-    btn.className = 'nav-item';
-    btn.id = 'logoutBtn';
-    btn.innerHTML = '<span>🚪</span> Se déconnecter';
-    btn.addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-      window.location.href = 'index.html';
-    });
-    bottom.insertBefore(btn, bottom.firstChild.nextSibling);
+  /* ---------- WhatsApp connection ---------- */
+  function renderWaStatus(connection){
+    const overviewBtn = document.getElementById('waConnectBtnOverview');
+    if (connection) {
+      document.getElementById('waTitle').innerHTML = '<span class="wa-status-dot"></span>WhatsApp connecté';
+      document.getElementById('waSubtitle').textContent = connection.business_phone_number || 'Numéro relié à votre compte.';
+      overviewBtn.style.display = 'none';
+
+      document.getElementById('waSettingsText').textContent = 'Connecté : ' + (connection.business_phone_number || '');
+      document.getElementById('waSettingsActions').innerHTML = '<button class="btn btn-danger" id="waDisconnectBtn">Déconnecter</button>';
+      const dBtn = document.getElementById('waDisconnectBtn');
+      if (dBtn) dBtn.addEventListener('click', disconnectWhatsApp);
+    } else {
+      document.getElementById('waTitle').textContent = "Aucun numéro WhatsApp connecté";
+      document.getElementById('waSubtitle').textContent = 'Connectez votre WhatsApp Business pour recevoir vos messages ici.';
+      overviewBtn.style.display = 'inline-flex';
+      overviewBtn.onclick = connectWhatsApp;
+
+      document.getElementById('waSettingsText').textContent = 'Pas encore connecté.';
+      document.getElementById('waSettingsActions').innerHTML = '<button class="btn btn-primary" id="waConnectBtnSettings">Connecter mon WhatsApp</button>';
+      const cBtn = document.getElementById('waConnectBtnSettings');
+      if (cBtn) cBtn.addEventListener('click', connectWhatsApp);
+    }
   }
 
+  async function loadWaStatus(){
+    try {
+      const { connection } = await api('/api/whatsapp/status');
+      renderWaStatus(connection);
+    } catch (err) {
+      document.getElementById('waTitle').textContent = 'Connexion au serveur…';
+      document.getElementById('waSubtitle').textContent = 'Rechargez la page dans quelques secondes.';
+    }
+  }
+
+  async function disconnectWhatsApp(){
+    try {
+      await api('/api/whatsapp/disconnect', { method: 'DELETE' });
+      toast('WhatsApp déconnecté.');
+      loadWaStatus();
+    } catch (err) {
+      toast('Erreur : ' + err.message);
+    }
+  }
+
+  function connectWhatsApp(){
+    // La configuration Meta (Embedded Signup) sera activée dès que
+    // META_APP_ID / META_CONFIG_ID seront renseignés côté serveur.
+    toast("La connexion WhatsApp arrive très bientôt — encore une étape technique côté Meta à finaliser.");
+  }
+
+  /* ---------- Logout ---------- */
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'index.html';
+  });
+
+  /* ---------- Init ---------- */
   async function init(){
     const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) {
-      window.location.href = 'index.html';
-      return;
-    }
+    if (!session) { window.location.href = 'index.html'; return; }
     accessToken = session.access_token;
-    addLogoutButton();
     loadProfile();
     loadContacts();
+    loadWaStatus();
   }
-
   init();
 })();
 </script>
-
 </body>
 </html>
