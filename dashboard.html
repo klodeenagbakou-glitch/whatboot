@@ -585,8 +585,13 @@ button{font-family:inherit;cursor:pointer;}
 
   function connectWhatsApp(){
     if (!fbSdkReady || typeof FB === 'undefined') {
-      setWaMessage("Chargement de la connexion Meta… recliquez dans 2 secondes.");
+      setWaMessage("Chargement de Facebook… si ça ne bouge plus après quelques secondes, un bloqueur de publicité empêche probablement la connexion — essayez en navigation privée.");
       loadFacebookSdk();
+      setTimeout(() => {
+        if (!fbSdkReady) {
+          setWaMessage("⚠️ Facebook ne se charge pas — ton navigateur (bloqueur de pub, extension de confidentialité) empêche probablement la connexion. Essaie en navigation privée, ou désactive le bloqueur pour ce site, puis recommence.");
+        }
+      }, 4000);
       return;
     }
     waSignupData = null;
