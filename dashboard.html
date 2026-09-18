@@ -554,6 +554,15 @@ button{font-family:inherit;cursor:pointer;}
   }
   loadFacebookSdk();
 
+  function setWaMessage(text){
+    const t1 = document.getElementById('waTitle');
+    const t2 = document.getElementById('waSubtitle');
+    const t3 = document.getElementById('waSettingsText');
+    if (t1) t1.textContent = text;
+    if (t2) t2.textContent = '';
+    if (t3) t3.textContent = text;
+  }
+
   // Récupère les infos (waba_id, phone_number_id...) que Meta envoie pendant
   // le processus, via un message du navigateur (postMessage).
   let waSignupData = null;
@@ -561,24 +570,33 @@ button{font-family:inherit;cursor:pointer;}
     if (!event.origin.endsWith('facebook.com')) return;
     try {
       const data = JSON.parse(event.data);
-      if (data.type === 'WA_EMBEDDED_SIGNUP' && data.event === 'FINISH') {
-        waSignupData = data.data; // { phone_number_id, waba_id, business_id, ... }
+      console.log('[WhaBoost] message reçu de Meta :', data);
+      if (data.type === 'WA_EMBEDDED_SIGNUP') {
+        if (data.event === 'FINISH' || data.event === 'FINISH_ONLY_WABA' || data.event === 'FINISH_WHATSAPP_BUSINESS_APP_ONBOARDING') {
+          waSignupData = data.data;
+        } else if (data.event === 'CANCEL') {
+          setWaMessage("Connexion annulée avant la fin (étape : " + (data.data?.current_step || '?') + ").");
+        } else if (data.event === 'ERROR') {
+          setWaMessage("Erreur Meta : " + (data.data?.error_message || 'inconnue'));
+        }
       }
     } catch (e) { /* message non lié à l'embedded signup, on ignore */ }
   });
 
   function connectWhatsApp(){
     if (!fbSdkReady || typeof FB === 'undefined') {
-      toast("Chargement de la connexion Meta… réessayez dans 2 secondes.");
+      setWaMessage("Chargement de la connexion Meta… recliquez dans 2 secondes.");
       loadFacebookSdk();
       return;
     }
     waSignupData = null;
+    setWaMessage('Fenêtre Meta ouverte — choisissez votre numéro puis "Terminer".');
     FB.login((response) => {
+      console.log('[WhaBoost] réponse FB.login :', response);
       if (response.authResponse && response.authResponse.code) {
         finalizeWhatsAppConnection(response.authResponse.code);
       } else {
-        toast('Connexion annulée.');
+        setWaMessage("La fenêtre Meta s'est fermée sans code d'autorisation. Réessayez et allez bien jusqu'au bouton \"Terminer\" à la fin.");
       }
     }, {
       config_id: META_CONFIG_ID,
@@ -589,14 +607,17 @@ button{font-family:inherit;cursor:pointer;}
   }
 
   async function finalizeWhatsAppConnection(code){
-    // On laisse une seconde au message postMessage de Meta le temps d'arriver.
-    await new Promise(r => setTimeout(r, 800));
+    setWaMessage('Récupération des informations de votre numéro…');
+    // On laisse jusqu'à 4 secondes au message postMessage de Meta le temps d'arriver.
+    for (let i = 0; i < 8 && !waSignupData; i++) {
+      await new Promise(r => setTimeout(r, 500));
+    }
     if (!waSignupData || !waSignupData.waba_id || !waSignupData.phone_number_id) {
-      toast("Numéro sélectionné, finalisation en cours… si rien ne se passe, réessayez.");
+      setWaMessage("Le numéro a bien été choisi côté Meta, mais les détails techniques ne sont pas arrivés jusqu'ici. Réessayez — si ça persiste, dites-le moi.");
       return;
     }
     try {
-      toast('Connexion de votre numéro WhatsApp…');
+      setWaMessage('Connexion de votre numéro WhatsApp…');
       const { connection } = await api('/api/whatsapp/connect', {
         method: 'POST',
         body: JSON.stringify({
@@ -609,7 +630,7 @@ button{font-family:inherit;cursor:pointer;}
       toast('WhatsApp connecté ✅');
       renderWaStatus(connection);
     } catch (err) {
-      toast('Erreur : ' + err.message);
+      setWaMessage('Erreur lors de la connexion : ' + err.message);
     }
   }
 
