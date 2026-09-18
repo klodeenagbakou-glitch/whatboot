@@ -490,10 +490,83 @@ button{font-family:inherit;cursor:pointer;}
     }
   }
 
+  const META_APP_ID = '1614834316913127';
+  const META_CONFIG_ID = '1776247376876703';
+  let fbSdkReady = false;
+
+  function loadFacebookSdk(){
+    if (document.getElementById('facebook-jssdk')) return;
+    window.fbAsyncInit = function () {
+      FB.init({ appId: META_APP_ID, cookie: true, xfbml: false, version: 'v20.0' });
+      fbSdkReady = true;
+    };
+    const js = document.createElement('script');
+    js.id = 'facebook-jssdk';
+    js.src = 'https://connect.facebook.net/fr_FR/sdk.js';
+    js.async = true;
+    js.defer = true;
+    js.crossOrigin = 'anonymous';
+    document.body.appendChild(js);
+  }
+  loadFacebookSdk();
+
+  // Récupère les infos (waba_id, phone_number_id...) que Meta envoie pendant
+  // le processus, via un message du navigateur (postMessage).
+  let waSignupData = null;
+  window.addEventListener('message', (event) => {
+    if (!event.origin.endsWith('facebook.com')) return;
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'WA_EMBEDDED_SIGNUP' && data.event === 'FINISH') {
+        waSignupData = data.data; // { phone_number_id, waba_id, business_id, ... }
+      }
+    } catch (e) { /* message non lié à l'embedded signup, on ignore */ }
+  });
+
   function connectWhatsApp(){
-    // La configuration Meta (Embedded Signup) sera activée dès que
-    // META_APP_ID / META_CONFIG_ID seront renseignés côté serveur.
-    toast("La connexion WhatsApp arrive très bientôt — encore une étape technique côté Meta à finaliser.");
+    if (!fbSdkReady || typeof FB === 'undefined') {
+      toast("Chargement de la connexion Meta… réessayez dans 2 secondes.");
+      loadFacebookSdk();
+      return;
+    }
+    waSignupData = null;
+    FB.login((response) => {
+      if (response.authResponse && response.authResponse.code) {
+        finalizeWhatsAppConnection(response.authResponse.code);
+      } else {
+        toast('Connexion annulée.');
+      }
+    }, {
+      config_id: META_CONFIG_ID,
+      response_type: 'code',
+      override_default_response_type: true,
+      extras: { sessionInfoVersion: '3' },
+    });
+  }
+
+  async function finalizeWhatsAppConnection(code){
+    // On laisse une seconde au message postMessage de Meta le temps d'arriver.
+    await new Promise(r => setTimeout(r, 800));
+    if (!waSignupData || !waSignupData.waba_id || !waSignupData.phone_number_id) {
+      toast("Numéro sélectionné, finalisation en cours… si rien ne se passe, réessayez.");
+      return;
+    }
+    try {
+      toast('Connexion de votre numéro WhatsApp…');
+      const { connection } = await api('/api/whatsapp/connect', {
+        method: 'POST',
+        body: JSON.stringify({
+          code,
+          waba_id: waSignupData.waba_id,
+          phone_number_id: waSignupData.phone_number_id,
+          business_phone_number: waSignupData.display_phone_number || '',
+        }),
+      });
+      toast('WhatsApp connecté ✅');
+      renderWaStatus(connection);
+    } catch (err) {
+      toast('Erreur : ' + err.message);
+    }
   }
 
   /* ---------- Logout ---------- */
