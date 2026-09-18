@@ -24,6 +24,9 @@ button{font-family:inherit;cursor:pointer;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.55);}70%{box-shadow:0 0 0 9px rgba(37,211,102,0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
+@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-14px,10px) scale(1.08);}}
+@keyframes shimmer{0%{background-position:-200px 0;}100%{background-position:200px 0;}}
+.shimmer{background:linear-gradient(90deg,var(--paper-dim) 25%,#fff 37%,var(--paper-dim) 63%);background-size:400px 100%;animation:shimmer 1.4s infinite;border-radius:10px;}
 
 /* ---------- Layout ---------- */
 .app{display:flex;min-height:100vh;}
@@ -54,10 +57,11 @@ button{font-family:inherit;cursor:pointer;}
 .card + .card{margin-top:18px;}
 
 /* ---------- Welcome banner ---------- */
-.welcome{background:linear-gradient(120deg,var(--bottle),#163b2e);color:#fff;border-radius:20px;padding:28px 30px;position:relative;overflow:hidden;}
-.welcome::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(226,163,59,0.35),transparent 70%);}
-.welcome h2{color:#fff;font-size:22px;}
-.welcome p{color:#BFE0D2;font-size:13.5px;margin-top:6px;max-width:420px;}
+.welcome{background:linear-gradient(120deg,var(--bottle),#163b2e);color:#fff;border-radius:20px;padding:30px 32px;position:relative;overflow:hidden;}
+.welcome::after{content:"";position:absolute;right:-40px;top:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(226,163,59,0.4),transparent 70%);animation:floatBlob 7s ease-in-out infinite;}
+.welcome::before{content:"";position:absolute;left:40%;bottom:-70px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(193,80,46,0.28),transparent 70%);animation:floatBlob 9s ease-in-out infinite reverse;}
+.welcome h2{color:#fff;font-size:23px;position:relative;}
+.welcome p{color:#BFE0D2;font-size:13.5px;margin-top:6px;max-width:420px;position:relative;}
 
 /* ---------- WhatsApp connection card ---------- */
 .wa-card{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
@@ -71,6 +75,7 @@ button{font-family:inherit;cursor:pointer;}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:99px;font-weight:700;font-size:13.5px;border:1.5px solid transparent;transition:transform .15s ease,box-shadow .15s ease;text-decoration:none;}
 .btn-primary{background:var(--bottle);color:#fff;}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 24px -12px rgba(15,61,46,.55);}
+.btn-primary:active{transform:translateY(0) scale(.97);}
 .btn-ghost{background:transparent;color:var(--bottle-dark);border-color:var(--line);}
 .btn-ghost:hover{border-color:var(--bottle);}
 .btn-danger{background:transparent;color:var(--clay);border-color:var(--line);}
@@ -78,16 +83,22 @@ button{font-family:inherit;cursor:pointer;}
 
 /* ---------- Quick actions ---------- */
 .quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:18px;}
-.quick-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:18px;transition:transform .18s ease,box-shadow .18s ease;text-align:left;}
-.quick-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--marigold);}
-.quick-card .qi{width:36px;height:36px;border-radius:10px;background:var(--sage);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.quick-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:18px;transition:transform .18s ease,box-shadow .18s ease;text-align:left;opacity:0;animation:fadeUp .4s ease forwards;}
+.quick-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--marigold);}
+.quick-card .qi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px;}
+.quick-card:nth-child(1) .qi{background:var(--sage);}
+.quick-card:nth-child(2) .qi{background:#FBEBD3;}
+.quick-card:nth-child(3) .qi{background:#F6DCD1;}
+.quick-card:nth-child(1){animation-delay:.05s;}
+.quick-card:nth-child(2){animation-delay:.15s;}
+.quick-card:nth-child(3){animation-delay:.25s;}
 .quick-card h4{margin:0 0 4px;font-size:14px;font-family:'Manrope',sans-serif;font-weight:700;color:var(--ink);}
 .quick-card p{margin:0;font-size:12.5px;color:var(--ink-soft);}
 
 /* ---------- Contacts ---------- */
 .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
 .search{flex:1;min-width:180px;padding:11px 16px;border-radius:99px;border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;background:var(--white);}
-.contact-row{display:flex;align-items:center;gap:14px;padding:14px 6px;border-bottom:1px solid var(--line);animation:fadeUp .3s ease both;}
+.contact-row{display:flex;align-items:center;gap:14px;padding:14px 6px;border-bottom:1px solid var(--line);opacity:0;animation:fadeUp .35s ease forwards;}
 .contact-row:last-child{border-bottom:none;}
 .contact-row .avatar{width:38px;height:38px;font-size:13px;}
 .contact-main{flex:1;min-width:0;}
@@ -95,7 +106,7 @@ button{font-family:inherit;cursor:pointer;}
 .contact-main span{font-size:12.5px;color:var(--ink-soft);}
 .tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--sage);color:var(--bottle-dark);}
 .empty-state{text-align:center;padding:44px 20px;color:var(--ink-soft);}
-.empty-state .ei{width:52px;height:52px;margin:0 auto 14px;border-radius:16px;background:var(--sage);display:flex;align-items:center;justify-content:center;}
+.empty-state .ei{width:52px;height:52px;margin:0 auto 14px;border-radius:16px;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:22px;}
 .empty-state h3{color:var(--bottle-dark);font-size:16px;margin-bottom:6px;}
 .empty-state p{font-size:13px;max-width:340px;margin:0 auto;}
 
@@ -109,9 +120,10 @@ button{font-family:inherit;cursor:pointer;}
 /* ---------- Settings ---------- */
 .field{margin-bottom:16px;}
 .field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
-.field input{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;background:var(--paper);}
+.field input{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;background:var(--paper);transition:border-color .15s ease,background .15s ease;}
 .field input:focus{outline:none;border-color:var(--bottle);background:var(--white);}
-.field input:disabled{color:var(--ink-soft);}
+.field input:disabled{color:var(--ink-soft);background:var(--paper-dim);cursor:not-allowed;}
+.field small{display:block;margin-top:5px;font-size:11px;color:var(--ink-soft);}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
 
 /* ---------- Modal ---------- */
@@ -127,20 +139,32 @@ button{font-family:inherit;cursor:pointer;}
 .spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .7s linear infinite;display:inline-block;}
 
 /* ---------- Mobile ---------- */
-.hamburger{display:none;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:9px 11px;position:fixed;top:14px;left:14px;z-index:150;}
+.hamburger{display:none;background:var(--white);border:1px solid var(--line);border-radius:10px;width:40px;height:40px;align-items:center;justify-content:center;position:fixed;top:14px;left:14px;z-index:150;box-shadow:var(--shadow);}
+.hamburger span, .hamburger span::before, .hamburger span::after{content:"";display:block;width:18px;height:2px;background:var(--bottle-dark);border-radius:2px;position:relative;}
+.hamburger span::before{position:absolute;top:-6px;}
+.hamburger span::after{position:absolute;top:6px;}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(9,42,32,.4);z-index:130;}
+.sidebar-backdrop.show{display:block;animation:fadeUp .2s ease both;}
 @media (max-width:880px){
-  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:140;transition:left .25s ease;box-shadow:0 0 0 9999px rgba(0,0,0,0);}
+  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:140;transition:left .25s ease;}
   .sidebar.open{left:0;box-shadow:20px 0 50px -20px rgba(0,0,0,.25);}
-  .hamburger{display:block;}
-  .topbar{padding:64px 18px 0;}
+  .hamburger{display:flex;}
+  .topbar{padding:70px 18px 0;}
   .content{padding:18px 18px 60px;}
   .two-col{grid-template-columns:1fr;}
+  .welcome{padding:24px 20px;}
+  .card{padding:18px;}
+}
+@media (max-width:420px){
+  .quick-grid{grid-template-columns:1fr;}
+  .wa-card{align-items:flex-start;}
 }
 </style>
 </head>
 <body>
 
-<button class="hamburger" id="hamburgerBtn">☰</button>
+<button class="hamburger" id="hamburgerBtn"><span></span></button>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -223,7 +247,11 @@ button{font-family:inherit;cursor:pointer;}
             <button class="btn btn-primary" id="openAddContact">+ Ajouter un contact</button>
           </div>
           <div id="contactsList">
-            <div class="empty-state"><div class="ei">👥</div><h3>Chargement…</h3></div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="shimmer" style="height:52px;"></div>
+              <div class="shimmer" style="height:52px;"></div>
+              <div class="shimmer" style="height:52px;"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -268,7 +296,7 @@ button{font-family:inherit;cursor:pointer;}
           <div class="two-col">
             <div class="field"><label>Nom de l'entreprise</label><input id="companyName" placeholder="Ma Boutique"></div>
             <div class="field"><label>Responsable</label><input id="managerName" placeholder="Votre nom"></div>
-            <div class="field"><label>Email du compte</label><input id="accountEmail" disabled></div>
+            <div class="field"><label>Email du compte</label><input id="accountEmail" disabled><small>🔒 Non modifiable — c'est votre identifiant de connexion.</small></div>
             <div class="field"><label>Téléphone de contact</label><input id="accountPhone" placeholder="+229 …"></div>
           </div>
           <button class="btn btn-primary" id="saveSettingsBtn">Enregistrer</button>
@@ -349,12 +377,28 @@ button{font-family:inherit;cursor:pointer;}
   function goTo(page){
     document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
     document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.toggle('active', n.dataset.page === page));
-    document.getElementById('sidebar').classList.remove('open');
+    closeSidebar();
   }
   navItems.forEach(el => el.addEventListener('click', () => goTo(el.dataset.page)));
-  document.getElementById('hamburgerBtn').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebarBackdrop').classList.add('show');
+  });
+  document.getElementById('sidebarBackdrop').addEventListener('click', closeSidebar);
+  function closeSidebar(){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarBackdrop').classList.remove('show');
+  }
 
   /* ---------- Contacts ---------- */
+  const avatarPalette = ['#0F3D2E','#E2A33B','#C1502E','#4F6357','#B97F1F'];
+  function avatarColor(name){
+    const str = name || '?';
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    return avatarPalette[Math.abs(hash) % avatarPalette.length];
+  }
+
   function renderContacts(contacts, filter){
     const list = document.getElementById('contactsList');
     const filtered = filter
@@ -364,9 +408,9 @@ button{font-family:inherit;cursor:pointer;}
       list.innerHTML = `<div class="empty-state"><div class="ei">👥</div><h3>Aucun contact${filter ? ' trouvé' : ' pour l\'instant'}</h3><p>${filter ? 'Essayez un autre nom ou numéro.' : 'Ajoutez votre premier client avec le bouton ci-dessus.'}</p></div>`;
       return;
     }
-    list.innerHTML = filtered.map(c => `
-      <div class="contact-row">
-        <div class="avatar">${initials(c.full_name)}</div>
+    list.innerHTML = filtered.map((c, i) => `
+      <div class="contact-row" style="animation-delay:${Math.min(i * 0.05, 0.5)}s">
+        <div class="avatar" style="background:${avatarColor(c.full_name)};color:#fff;">${initials(c.full_name)}</div>
         <div class="contact-main">
           <strong>${c.full_name}</strong>
           <span>${c.phone_number}</span>
@@ -384,7 +428,7 @@ button{font-family:inherit;cursor:pointer;}
       renderContacts(allContacts, '');
     } catch (err) {
       document.getElementById('contactsList').innerHTML =
-        `<div class="empty-state"><div class="ei">⚠️</div><h3>Connexion au serveur…</h3><p>${err.message} — le serveur gratuit se réveille parfois en quelques secondes, réessayez.</p></div>`;
+        `<div class="empty-state"><div class="ei">⚠️</div><h3>Connexion au serveur…</h3><p>Le serveur gratuit se réveille parfois en quelques secondes.</p><button class="btn btn-ghost" style="margin-top:12px;" onclick="location.reload()">Réessayer</button></div>`;
     }
   }
   document.getElementById('contactSearch').addEventListener('input', (e) => {
@@ -476,7 +520,7 @@ button{font-family:inherit;cursor:pointer;}
       renderWaStatus(connection);
     } catch (err) {
       document.getElementById('waTitle').textContent = 'Connexion au serveur…';
-      document.getElementById('waSubtitle').textContent = 'Rechargez la page dans quelques secondes.';
+      document.getElementById('waSubtitle').innerHTML = 'Le serveur se réveille — <a href="#" onclick="location.reload();return false;" style="color:var(--marigold-dark);font-weight:700;">réessayer</a>';
     }
   }
 
@@ -576,6 +620,7 @@ button{font-family:inherit;cursor:pointer;}
   });
 
   /* ---------- Init ---------- */
+  fetch(BACKEND_URL + '/health').catch(() => {}); // réveille le serveur gratuit dès l'arrivée sur la page
   async function init(){
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) { window.location.href = 'index.html'; return; }
