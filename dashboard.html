@@ -117,6 +117,28 @@ button{font-family:inherit;cursor:pointer;}
 .soon p{color:var(--ink-soft);font-size:13.5px;max-width:380px;margin:0 auto;}
 .soon .badge{display:inline-block;margin-top:16px;font-size:11.5px;font-weight:700;color:var(--marigold-dark);background:#FBF0DC;padding:6px 14px;border-radius:99px;}
 
+/* ---------- WhatsApp-style inbox (page Messages) ---------- */
+.wa-inbox{display:flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);height:min(600px,70vh);background:#fff;}
+.wa-inbox-list{width:320px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#F7F5EE;}
+.wa-inbox-search{padding:14px;}
+.wa-inbox-search input{width:100%;padding:10px 14px;border-radius:99px;border:1.5px solid var(--line);font-family:inherit;font-size:13px;background:#fff;}
+.wa-inbox-chat{flex:1;display:flex;flex-direction:column;min-width:0;}
+.wa-inbox-chat-header{background:#075E54;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.wa-inbox-chat-header strong{display:block;font-size:14.5px;}
+.wa-inbox-chat-header small{color:#CFE9E4;font-size:12px;}
+.wa-inbox-chat-body{flex:1;background:#ECE5DD url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><rect width="60" height="60" fill="%23ECE5DD"/></svg>');display:flex;align-items:center;justify-content:center;padding:20px;}
+.wa-inbox-empty{text-align:center;color:var(--ink-soft);max-width:320px;}
+.wa-inbox-empty .wie-icon{width:56px;height:56px;margin:0 auto 14px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:var(--shadow);}
+.wa-inbox-empty h3{font-size:15.5px;color:var(--bottle-dark);margin-bottom:6px;}
+.wa-inbox-empty p{font-size:13px;}
+.wa-inbox-list .wa-inbox-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+@media (max-width:760px){
+  .wa-inbox{flex-direction:column;height:auto;}
+  .wa-inbox-list{width:100%;border-right:none;border-bottom:1px solid var(--line);}
+  .wa-inbox-list .wa-inbox-empty{min-height:120px;}
+  .wa-inbox-chat-body{min-height:280px;}
+}
+
 /* ---------- Settings ---------- */
 .field{margin-bottom:16px;}
 .field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
@@ -259,14 +281,32 @@ button{font-family:inherit;cursor:pointer;}
 
     <!-- ===== MESSAGES ===== -->
     <section class="page" id="page-messages">
-      <div class="topbar"><h1>Messages</h1><p>Votre boîte de réception WhatsApp.</p></div>
-      <div class="content">
-        <div class="card">
-          <div class="soon">
-            <div class="si">💬</div>
-            <h2>La boîte de réception arrive bientôt</h2>
-            <p>Une fois votre numéro WhatsApp connecté, toutes vos conversations avec vos clients apparaîtront ici, en direct.</p>
-            <span class="badge">En cours de construction</span>
+      <div class="topbar"><h1>Messages</h1><p>Votre boîte de réception WhatsApp, dans un format que vous connaissez déjà.</p></div>
+      <div class="content" style="max-width:1100px;">
+        <div class="wa-inbox">
+          <div class="wa-inbox-list">
+            <div class="wa-inbox-search"><input placeholder="Rechercher une conversation…" disabled></div>
+            <div class="wa-inbox-empty">
+              <div class="wie-icon">💬</div>
+              <p>Vos conversations WhatsApp apparaîtront ici, dans l'ordre, dès que des clients vous écriront.</p>
+            </div>
+          </div>
+          <div class="wa-inbox-chat">
+            <div class="wa-inbox-chat-header">
+              <div class="avatar" style="background:rgba(255,255,255,.25);color:#fff;">?</div>
+              <div>
+                <strong id="inboxNumberLabel">Numéro WhatsApp non connecté</strong>
+                <small>Allez dans Paramètres pour connecter votre numéro</small>
+              </div>
+            </div>
+            <div class="wa-inbox-chat-body">
+              <div class="wa-inbox-empty">
+                <div class="wie-icon">📱</div>
+                <h3>Aucune conversation pour l'instant</h3>
+                <p>Une fois votre WhatsApp connecté, les messages de vos clients arriveront ici en temps réel, et vous pourrez leur répondre directement.</p>
+                <button class="btn btn-primary" id="inboxConnectBtn">Connecter mon WhatsApp</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -380,6 +420,8 @@ button{font-family:inherit;cursor:pointer;}
     closeSidebar();
   }
   navItems.forEach(el => el.addEventListener('click', () => goTo(el.dataset.page)));
+  const inboxConnectBtn = document.getElementById('inboxConnectBtn');
+  if (inboxConnectBtn) inboxConnectBtn.addEventListener('click', () => goTo('settings'));
   document.getElementById('hamburgerBtn').addEventListener('click', () => {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('sidebarBackdrop').classList.add('show');
@@ -492,10 +534,12 @@ button{font-family:inherit;cursor:pointer;}
   /* ---------- WhatsApp connection ---------- */
   function renderWaStatus(connection){
     const overviewBtn = document.getElementById('waConnectBtnOverview');
+    const inboxLabel = document.getElementById('inboxNumberLabel');
     if (connection) {
       document.getElementById('waTitle').innerHTML = '<span class="wa-status-dot"></span>WhatsApp connecté';
       document.getElementById('waSubtitle').textContent = connection.business_phone_number || 'Numéro relié à votre compte.';
       overviewBtn.style.display = 'none';
+      if (inboxLabel) inboxLabel.textContent = connection.business_phone_number || 'Numéro connecté';
 
       document.getElementById('waSettingsText').textContent = 'Connecté : ' + (connection.business_phone_number || '');
       document.getElementById('waSettingsActions').innerHTML = '<button class="btn btn-danger" id="waDisconnectBtn">Déconnecter</button>';
@@ -506,6 +550,7 @@ button{font-family:inherit;cursor:pointer;}
       document.getElementById('waSubtitle').textContent = 'Connectez votre WhatsApp Business pour recevoir vos messages ici.';
       overviewBtn.style.display = 'inline-flex';
       overviewBtn.onclick = connectWhatsApp;
+      if (inboxLabel) inboxLabel.textContent = 'Numéro WhatsApp non connecté';
 
       document.getElementById('waSettingsText').textContent = 'Pas encore connecté.';
       document.getElementById('waSettingsActions').innerHTML = '<button class="btn btn-primary" id="waConnectBtnSettings">Connecter mon WhatsApp</button>';
