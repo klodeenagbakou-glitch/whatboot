@@ -641,6 +641,10 @@ button{font-family:inherit;cursor:pointer;}
       }, 4000);
       return;
     }
+    // Le code que Meta va donner n'est valable que 30 secondes : on réveille
+    // le serveur MAINTENANT, avant même d'ouvrir la fenêtre Meta, pour qu'il
+    // soit déjà prêt à répondre quand le code arrivera.
+    fetch(BACKEND_URL + '/health').catch(() => {});
     waSignupData = null;
     setWaMessage('Fenêtre Meta ouverte — choisissez votre numéro puis "Terminer".');
     FB.login((response) => {
@@ -659,15 +663,11 @@ button{font-family:inherit;cursor:pointer;}
   }
 
   async function finalizeWhatsAppConnection(code){
-    setWaMessage('Récupération des informations de votre numéro…');
-    // On laisse jusqu'à 4 secondes au message postMessage de Meta le temps d'arriver.
-    for (let i = 0; i < 8 && !waSignupData; i++) {
-      await new Promise(r => setTimeout(r, 500));
-    }
+    // IMPORTANT : ce code n'est valable que 30 secondes chez Meta — on
+    // l'envoie tout de suite, sans attendre le message postMessage (on
+    // l'inclut seulement s'il est déjà arrivé à cet instant précis).
     try {
       setWaMessage('Connexion de votre numéro WhatsApp…');
-      // Si le message de Meta n'est jamais arrivé, on envoie quand même le
-      // "code" — le serveur sait retrouver le numéro tout seul dans ce cas.
       const { connection } = await api('/api/whatsapp/connect', {
         method: 'POST',
         body: JSON.stringify({
