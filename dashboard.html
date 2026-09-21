@@ -612,9 +612,11 @@ button{font-family:inherit;cursor:pointer;}
   // le processus, via un message du navigateur (postMessage).
   let waSignupData = null;
   window.addEventListener('message', (event) => {
-    if (!event.origin.endsWith('facebook.com')) return;
+    if (!event.origin.endsWith('facebook.com') && !event.origin.endsWith('.facebook.com')) return;
     try {
-      const data = JSON.parse(event.data);
+      // Meta envoie parfois du texte JSON, parfois déjà un objet — on gère les deux.
+      const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      if (!data || typeof data !== 'object') return;
       console.log('[WhaBoost] message reçu de Meta :', data);
       if (data.type === 'WA_EMBEDDED_SIGNUP') {
         if (data.event === 'FINISH' || data.event === 'FINISH_ONLY_WABA' || data.event === 'FINISH_WHATSAPP_BUSINESS_APP_ONBOARDING') {
@@ -625,7 +627,7 @@ button{font-family:inherit;cursor:pointer;}
           setWaMessage("Erreur Meta : " + (data.data?.error_message || 'inconnue'));
         }
       }
-    } catch (e) { /* message non lié à l'embedded signup, on ignore */ }
+    } catch (e) { console.log('[WhaBoost] message non-JSON ignoré :', event.data); }
   });
 
   function connectWhatsApp(){
@@ -662,19 +664,17 @@ button{font-family:inherit;cursor:pointer;}
     for (let i = 0; i < 8 && !waSignupData; i++) {
       await new Promise(r => setTimeout(r, 500));
     }
-    if (!waSignupData || !waSignupData.waba_id || !waSignupData.phone_number_id) {
-      setWaMessage("Le numéro a bien été choisi côté Meta, mais les détails techniques ne sont pas arrivés jusqu'ici. Réessayez — si ça persiste, dites-le moi.");
-      return;
-    }
     try {
       setWaMessage('Connexion de votre numéro WhatsApp…');
+      // Si le message de Meta n'est jamais arrivé, on envoie quand même le
+      // "code" — le serveur sait retrouver le numéro tout seul dans ce cas.
       const { connection } = await api('/api/whatsapp/connect', {
         method: 'POST',
         body: JSON.stringify({
           code,
-          waba_id: waSignupData.waba_id,
-          phone_number_id: waSignupData.phone_number_id,
-          business_phone_number: waSignupData.display_phone_number || '',
+          waba_id: waSignupData?.waba_id,
+          phone_number_id: waSignupData?.phone_number_id,
+          business_phone_number: waSignupData?.display_phone_number || '',
         }),
       });
       toast('WhatsApp connecté ✅');
