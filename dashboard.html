@@ -586,7 +586,7 @@ button{font-family:inherit;cursor:pointer;}
   function loadFacebookSdk(){
     if (document.getElementById('facebook-jssdk')) return;
     window.fbAsyncInit = function () {
-      FB.init({ appId: META_APP_ID, cookie: true, xfbml: false, version: 'v20.0' });
+      FB.init({ appId: META_APP_ID, cookie: true, xfbml: true, autoLogAppEvents: true, version: 'v20.0' });
       fbSdkReady = true;
     };
     const js = document.createElement('script');
@@ -658,7 +658,7 @@ button{font-family:inherit;cursor:pointer;}
       config_id: META_CONFIG_ID,
       response_type: 'code',
       override_default_response_type: true,
-      extras: { sessionInfoVersion: '3' },
+      extras: { setup: {}, featureType: '', sessionInfoVersion: '3' },
     });
   }
 
